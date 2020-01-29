@@ -1,7 +1,7 @@
 {
-  "name": "intermediate-component-billing-sa",
-  "version": "0.0.1",
-  "description": "Intermediate component billing Speechanalytics",
+  "name": "intermediate-component-sa",
+  "version": "1.0.5s",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
