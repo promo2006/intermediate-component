@@ -1,0 +1,15 @@
+{
+  "name": "intermediate-component-billing-sa",
+  "version": "0.0.1",
+  "description": "Intermediate component billing Speechanalytics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://speechanalytic.visualstudio.com/intermediate-component/_git/intermediate-component"
+  },
+  "author": "inConcert",
+  "license": "ISC"
+}
