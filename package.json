@@ -1,6 +1,6 @@
 {
   "name": "intermediate-component-sa",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "test.js",
   "scripts": {
@@ -13,12 +13,11 @@
   "author": "inConcert",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.88.0"
-  },
-  "devDependencies": {
     "@types/request-promise-native": "^1.0.17",
+    "request": "^2.88.0",
     "request-promise": "^4.2.5",
     "request-promise-native": "^1.0.8",
     "typescript": "^3.7.5"
-  }
+  },
+  "devDependencies": {}
 }
