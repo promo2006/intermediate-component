@@ -1,6 +1,6 @@
 {
   "name": "intermediate-component-sa",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "test.js",
   "scripts": {
@@ -18,6 +18,9 @@
     "request-promise": "^4.2.5",
     "request-promise-native": "^1.0.8",
     "typescript": "^3.7.5"
+  },
+  "pkg": {
+    "scripts": "**/*.js"
   },
   "devDependencies": {}
 }
