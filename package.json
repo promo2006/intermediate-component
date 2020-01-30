@@ -1,8 +1,8 @@
 {
   "name": "intermediate-component-sa",
-  "version": "1.0.5s",
+  "version": "0.0.9",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
-  "main": "index.js",
+  "main": "test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,5 +11,13 @@
     "url": "https://speechanalytic.visualstudio.com/intermediate-component/_git/intermediate-component"
   },
   "author": "inConcert",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "request-promise": "^4.2.5",
+    "request-promise-native": "^1.0.8",
+    "typescript": "^3.7.5"
+  }
 }
