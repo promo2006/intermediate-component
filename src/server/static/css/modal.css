@@ -1,0 +1,258 @@
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url('../fonts/Roboto-Regular.woff2') format('woff2');
+}
+
+.ic-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99999;
+  display: none;
+  overflow: hidden;
+  outline: 0;
+  line-height: 30px;
+}
+
+.ic-modal.fade {
+  opacity: 0;
+}
+
+.ic-modal.fade.in,
+.ic-modal.fade.show {
+  opacity: 1;
+}
+
+.ic-modal-open {
+  overflow: hidden;
+}
+
+.ic-modal.fade .ic-modal-dialog {
+  -webkit-transition: -webkit-transform .3s ease-out;
+  transition: -webkit-transform .3s ease-out;
+  -o-transition: -o-transform .3s ease-out;
+  transition: transform .3s ease-out;
+  transition: transform .3s ease-out, -webkit-transform .3s ease-out, -o-transform .3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  -o-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+}
+
+.ic-modal.in .ic-modal-dialog,
+.ic-modal.show .ic-modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+.ic-modal-open .ic-modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.ic-modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+
+.ic-modal-content {
+  position: relative;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+
+/* Segun la version de bootstrap se usa un backgrop dentro o fuera del modal */
+.modal-backdrop,
+.ic-modal .modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: auto; /* 1040; */
+  background-color: #000;
+}
+
+.modal-backdrop.fade,
+.ic-modal .modal-backdrop.fade {
+  opacity: 0;
+}
+
+.modal-backdrop.in,
+.modal-backdrop.show,
+.ic-modal .modal-backdrop.in,
+.ic-modal .modal-backdrop.show {
+  opacity: 0.5;
+}
+
+.ic-modal-header {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ic-modal-header::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ic-modal-header h4 {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  color: rgb(136, 136, 136);
+  text-align: center;
+}
+
+.ic-modal-header .close {
+  margin-top: -2px;
+}
+
+.ic-modal button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  -webkit-appearance: button;
+  cursor: pointer;
+  text-transform: none;
+  overflow: visible;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.ic-modal button.btn {
+  height: 50px;
+  margin: 0;
+  padding: 0 20px;
+  vertical-align: middle;
+  color: #373a3c;
+  background-color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 50px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border-color: #ccc;
+  text-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -o-transition: all .3s;
+  -moz-transition: all .3s;
+  -webkit-transition: all .3s;
+  -ms-transition: all .3s;
+  transition: all .3s;
+}
+
+.ic-modal button.btn:hover {
+  color: #373a3c;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.ic-modal .btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.ic-modal button.close {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+}
+
+.ic-modal .close {
+  float: right;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: .2;
+}
+
+.ic-modal-title {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ic-modal-body {
+  position: relative;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: initial;
+  font-family: 'Roboto', sans-serif;
+  color: rgb(136, 136, 136);
+}
+
+.ic-modal-footer {
+  padding: 15px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
+}
+
+.ic-modal-footer::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ic-modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+@media (min-width: 576px) {
+  .ic-modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+  }
+
+  .ic-modal-sm {
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 992px) {
+  .ic-modal-lg {
+    max-width: 900px;
+  }
+}

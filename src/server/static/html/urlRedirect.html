@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        Codigo: <input id="code">
+        <script>
+            var codeValue = (this.window.location.search)?this.window.location.search.substr(6):'';
+            document.getElementById("code").value = codeValue;
+        </script>
+    </body>
+
+</html>

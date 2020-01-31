@@ -1,0 +1,6 @@
+<a [routerLink]="['/']"></a>
+<router-outlet></router-outlet>
+<modal-cmp (onLoaded)="OnModalLoaded($event)"></modal-cmp>
+<modal-generic-cmp (onLoaded)="OnModalGenericLoaded($event)"></modal-generic-cmp>
+<loading-cmp (onLoaded)="OnLoadingLoaded($event)"></loading-cmp>
+<simple-notifications [options]="notificationOpts"></simple-notifications>

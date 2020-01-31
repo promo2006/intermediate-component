@@ -1,0 +1,1582 @@
+@import "gjs_variables.scss";
+
+/* Import Icon Fonts Set */
+@font-face {
+  font-family: 'ic-mas-designer';
+  src:  url('#{$designerFontUrl}.eot?fmcl1f');
+  src:  url('#{$designerFontUrl}.eot?fmcl1f#iefix') format('embedded-opentype'),
+    url('#{$designerFontUrl}.ttf?fmcl1f') format('truetype'),
+    url('#{$designerFontUrl}.woff?fmcl1f') format('woff'),
+    url('#{$designerFontUrl}.svg?fmcl1f#ic-mas-designer') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ic-mas-blocks';
+  src:  url('#{$blocksFontUrl}.eot?t6kf9h');
+  src:  url('#{$blocksFontUrl}.eot?t6kf9h#iefix') format('embedded-opentype'),
+    url('#{$blocksFontUrl}.ttf?t6kf9h') format('truetype'),
+    url('#{$blocksFontUrl}.woff?t6kf9h') format('woff'),
+    url('#{$blocksFontUrl}.svg?t6kf9h#ic-mas-blocks') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Designer Icon Font Set*/
+.icon-designer {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'ic-mas-designer' !important;
+  /*speak: none;*/
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.#{$app-prefix}radio-item-label.icon-designer {font-size: 16px;}
+
+.icon-designer-codeEdit:before {
+  content: "\e923";
+}
+
+.icon-designer-itemstart:before {
+  content: "\e915";
+}
+.icon-designer-itemstretch:before {
+  content: "\e916";
+}
+.icon-designer-itemend:before {
+  content: "\e917";
+}
+.icon-designer-itemmiddle:before {
+  content: "\e918";
+}
+.icon-designer-directionup:before {
+  content: "\e919";
+}
+.icon-designer-contentend:before {
+  content: "\e91a";
+}
+.icon-designer-contentmiddle:before {
+  content: "\e91b";
+}
+.icon-designer-contentspacear:before {
+  content: "\e91c";
+}
+.icon-designer-contentspacebet:before {
+  content: "\e91d";
+}
+.icon-designer-contentstart:before {
+  content: "\e91e";
+}
+.icon-designer-directiondown:before {
+  content: "\e91f";
+}
+.icon-designer-directionleft:before {
+  content: "\e920";
+}
+.icon-designer-directionright:before {
+  content: "\e921";
+}
+
+.icon-designer-move:before {
+  content: "\e912";
+}
+.icon-designer-clone:before {
+  content: "\e913";
+}
+.icon-designer-levelup:before {
+  content: "\e914";
+}
+.icon-designer-visible:before {
+  content: "\e910";
+}
+.icon-designer-hidden:before {
+  content: "\e911";
+}
+.icon-designer-previewclose:before {
+  content: "\e90f";
+}
+.icon-designer-blocks:before {
+  content: "\e900";
+}
+.icon-designer-code:before {
+  content: "\e901";
+}
+.icon-designer-delete:before {
+  content: "\e902";
+}
+.icon-designer-desktop:before {
+  content: "\e903";
+}
+.icon-designer-fullscreen:before {
+  content: "\e904";
+}
+.icon-designer-layers:before {
+  content: "\e905";
+}
+.icon-designer-alldevices:before {
+  content: "\e922";
+}
+.icon-designer-mobile:before {
+  content: "\e906";
+}
+.icon-designer-options:before {
+  content: "\e907";
+}
+.icon-designer-outline:before {
+  content: "\e908";
+}
+.icon-designer-preview:before {
+  content: "\e909";
+}
+.icon-designer-redo:before {
+  content: "\e90a";
+}
+.icon-designer-save:before {
+  content: "\e90b";
+}
+.icon-designer-style:before {
+  content: "\e90c";
+}
+.icon-designer-tablet:before {
+  content: "\e90d";
+}
+.icon-designer-undo:before {
+  content: "\e90e";
+}
+
+/* Estilos generales */
+
+body, html{
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  line-height: normal;
+}
+
+iframe {
+  user-select: none;
+}
+
+/* Para corregir cambios que provoca el bootstrap de la pagina principal */
+
+button, input, optgroup, select, textarea {
+    font-family: Arial;
+    font-size: 12px;
+    line-height: normal;
+    margin: 0;
+}
+
+/* Estilos para el editor */
+
+.#{$app-prefix}clm-tags .#{$app-prefix}sm-title,
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-title {
+  border-top: none;
+  }
+
+.#{$app-prefix}clm-tags .#{$app-prefix}clm-tag {
+  background-color: $tag-color;
+  border: none;
+  box-shadow: none;
+  padding: 5px 8px;
+  text-shadow: none;
+  position: relative;
+  }
+
+.#{$app-prefix}sm-property {
+  color: #999;
+  }
+
+.#{$app-prefix}sm-label {
+  padding-left: 6px;
+  }
+
+  #gjs-sm-background > .#{$app-prefix}sm-label {
+    display: none;
+    }
+  
+
+.#{$app-prefix}clm-tags #gjs-clm-checkbox {
+  font-size: 14px;
+  
+  } 
+  
+.#{$app-prefix}clm-tags #gjs-clm-close {
+  font-size: 22px;
+  position: absolute;
+  right: 3px;
+  top: 10px;
+  }  
+
+.#{$app-prefix}layers .#{$app-prefix}nv-item ##{$app-prefix}nv-btn-eye{font-weight: normal !important;}
+.fa-check-square-o:before{font-weight: 400; content: "\f14a"}
+.fa-square-o:before{font-weight: 400; content: "\f0c8"}
+.fa-arrows:before {font-weight: 900; content: "\f0b2"}
+
+/*.#{$app-prefix}sm-label.#{$app-prefix}color-hl {
+  color: #71b7f1;
+  }
+
+.#{$app-prefix}sm-label.#{$app-prefix}color-warn {
+  color: #ffca6f;
+  }*/
+  
+
+ /* .#{$app-prefix}sm-label::after {
+    content:":";
+    } */
+
+.#{$app-prefix}field {
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: none;
+  border:1px solid #313131;
+  border-radius: 6px;
+  }
+
+.#{$app-prefix}pn-buttons {
+    justify-content: center;
+}
+
+.#{$app-prefix}pn-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+  }
+
+.#{$app-prefix}btnt.#{$app-prefix}pn-active,
+.#{$app-prefix}color-active,
+.#{$app-prefix}four-color,
+.#{$app-prefix}pn-btn.#{$app-prefix}pn-active,
+.#{$app-prefix}pn-btn:active
+/*.#{$app-prefix}block:hover */{
+  color: $active-color;
+}
+/*
+#gjs-rte-toolbar .#{$app-prefix}rte-btn,
+.#{$app-prefix}btn-prim,
+.#{$app-prefix}btnt,
+.#{$app-prefix}clm-tags .#{$app-prefix}sm-composite.#{$app-prefix}clm-field,
+.#{$app-prefix}clm-tags .#{$app-prefix}sm-field.#{$app-prefix}sm-composite,
+.#{$app-prefix}clm-tags .#{$app-prefix}sm-stack #gjs-sm-add,
+.#{$app-prefix}color-main,
+.#{$app-prefix}mdl-dialog,
+.#{$app-prefix}off-prv,
+.#{$app-prefix}pn-btn,
+.#{$app-prefix}pn-panel,
+.#{$app-prefix}pn-logo,
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-composite.#{$app-prefix}clm-field,
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-field.#{$app-prefix}sm-composite,
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-stack #gjs-sm-add {
+  color: $fontColor;
+}
+
+#gjs-rte-toolbar,
+.#{$app-prefix}bg-main,
+.#{$app-prefix}clm-select option,
+.#{$app-prefix}clm-tags .#{$app-prefix}sm-colorp-c,
+.#{$app-prefix}editor,
+.#{$app-prefix}mdl-dialog,
+.#{$app-prefix}nv-item .#{$app-prefix}nv-title-c,
+.#{$app-prefix}off-prv,
+.#{$app-prefix}pn-panel,
+.#{$app-prefix}pn-logo,
+.#{$app-prefix}block,
+.#{$app-prefix}select option,
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-colorp-c,
+.#{$app-prefix}sm-select option,
+.#{$app-prefix}sm-unit option,
+.sp-container {
+  background-color: $mainColor;
+}*/
+
+/* Main panel */
+.#{$app-prefix}pn-panel{padding: 7px;}
+
+.#{$app-prefix}toolbar-item{display: inline-block !important; font-weight: normal !important}
+.#{$app-prefix}off-prv:before{font-family: 'ic-mas-designer' !important;content: "\e90f";}
+##{$app-prefix}nv-btn-eye.fa-eye:before{font-family: 'ic-mas-designer' !important;content: "\e910";}
+.gjs-layers .gjs-nv-item.gjs-nv-hide ##{$app-prefix}nv-btn-eye.fa-eye:before{ content: "\e911";}
+
+.#{$app-prefix}import-label,
+.#{$app-prefix}export-label {
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.#{$app-prefix}mdl-dialog .#{$app-prefix}btn-import {
+  margin-top: 10px;
+}
+
+.CodeMirror {
+  border-radius: 3px;
+  height: 450px;
+  font-family: sans-serif, monospace;
+  letter-spacing: 0.3px;
+  font-size: 12px;
+}
+
+/* toolbar */
+.#{$app-prefix}toolbar-item{font-family: 'ic-mas-designer' !important;}
+.#{$app-prefix}toolbar-item.fa-arrows:before{content: "\e912";}
+.#{$app-prefix}toolbar-item.fa-arrow-up:before{content: "\e914";}
+.#{$app-prefix}toolbar-item.fa-clone:before{content: "\e913";}
+.#{$app-prefix}toolbar-item.fa-trash-o:before{content: "\e902";}
+
+/* Extra */
+
+/*.#{$app-prefix}block {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  margin: 10px 2.5% 5px;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.15);
+  transition: box-shadow, color 0.2s ease 0s;
+  align-items: center;
+  padding: 8px 1em;
+}
+
+.#{$app-prefix}block:hover {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.15);
+}*/
+
+/*
+#gjs-pn-logo.#{$app-prefix}pn-panel {
+  margin: 5px;
+  height: 30px;
+  width: 140px;
+  border: none;
+  position: relative;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url($logoUrl);
+}
+
+#gjs-pn-views-container.#{$app-prefix}pn-panel {
+  padding: 39px 0 0;
+}
+
+#gjs-pn-views.#{$app-prefix}pn-panel {
+  padding: 0;
+  border: none;
+}
+*/
+
+
+/*
+#gjs-pn-views .#{$app-prefix}pn-btn {
+  margin: 0;
+  height: 40px;
+  padding: 10px;
+  width: 25%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+#gjs-pn-views .#{$app-prefix}pn-active {
+  border-radius: 0;
+}
+*/
+
+
+#gjs-pn-devices-c {
+  padding-left: 30px;
+}
+
+#gjs-pn-options {
+  padding-right: 30px;
+}
+
+.#{$app-prefix}sm-composite .#{$app-prefix}sm-properties {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+/*#gjs-sm-border-top-left-radius,
+#gjs-sm-border-top-right-radius,
+#gjs-sm-border-bottom-left-radius,
+#gjs-sm-border-bottom-right-radius,*/
+#gjs-sm-margin-top,
+#gjs-sm-margin-bottom,
+#gjs-sm-margin-right,
+#gjs-sm-margin-left,
+#gjs-sm-padding-top,
+#gjs-sm-padding-bottom,
+#gjs-sm-padding-right,
+#gjs-sm-padding-left {
+  flex: 999 1 60px;
+}
+
+/*#gjs-sm-border-width,
+#gjs-sm-border-style,
+#gjs-sm-border-color {
+  flex: 999 1 80px;
+}*/
+
+#gjs-sm-margin-left,
+#gjs-sm-padding-left {
+  order: 2;
+}
+
+#gjs-sm-margin-right,
+#gjs-sm-padding-right {
+  order: 3;
+}
+
+#gjs-sm-margin-bottom,
+#gjs-sm-padding-bottom {
+  order: 4;
+}
+
+.#{$app-prefix}field-radio {
+  width: 100%;
+}
+
+.#{$app-prefix}field-radio #gjs-sm-input-holder {
+  display: flex;
+}
+
+.#{$app-prefix}radio-item {
+  flex: 1 0 auto;
+  text-align: center;
+
+  // Para evitar que el reboot de bootstrap me desacomode los botones
+  box-sizing: initial;
+  label {
+    margin: initial;
+    touch-action: manipulation;
+    height: 15px;
+    line-height: 15px;
+  }
+} 
+
+.gjs-radio-item:hover {
+  background: rgba(0,0,0,0.2);
+  color: #ffffff;
+  }
+/*
+.gjs-field:hover,
+.gjs-field:focus {
+  background: rgba(0,0,0,0.2);
+  border:1px solid #5887b66b;
+  color: #ffffff;
+  }
+
+.gjs-field:hover input,
+.gjs-field:focus input {
+  color: #ffffff;
+  }
+
+.gjs-field.gjs-select:hover,
+.gjs-field.gjs-select:focus {
+    cursor: pointer
+    }
+*/
+
+.#{$app-prefix}radio-item input:checked + .#{$app-prefix}radio-item-label {
+  background-color: #5887b6;
+  color:#ffffff;
+  border-radius: 4px;
+}
+
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-property.#{$app-prefix}sm-list {
+  width: 50%;
+}
+
+.#{$app-prefix}mdl-content {
+  border-top: none;
+}
+
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-property .#{$app-prefix}sm-layer.#{$app-prefix}sm-active {
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+/*
+#gjs-pn-views-container,
+#gjs-pn-views{
+  min-width: 270px;
+}
+*/
+
+.#{$app-prefix}f-button::before {
+  content: 'B';
+}
+
+.#{$app-prefix}f-divider::before {
+  content: 'D';
+}
+
+.#{$app-prefix}mdl-dialog-sm {
+  width: 300px;
+}
+
+.#{$app-prefix}mdl-dialog form .#{$app-prefix}sm-property {
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.#{$app-prefix}mdl-dialog form .#{$app-prefix}sm-label {
+  margin-bottom: 5px;
+}
+
+// ##{$app-prefix}clm-status-c {
+//   display: none;
+// }
+
+.anim-spin {
+  animation: 0.5s linear 0s normal none infinite running spin;
+}
+
+.form-status {
+  float: right;
+  font-size: 14px;
+}
+
+.text-danger {
+  color: #f92929;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#gjs-pn-devices-c {
+  width: 85%;
+  z-index: 1;
+}
+
+/*
+.gjs-am-preview-cont {
+  height: 100px;
+  width: 100%;
+}
+*/
+
+[data-tooltip]::after {
+  background: rgba(51, 51, 51, 0.9);
+  }
+
+/*#gjs-sm-sectors [data-tooltip]::after {
+  
+  }*/
+
+/* Notificaciones toast */
+
+#toast-container {
+  font-size: 13px;
+  font-weight: lighter;
+}
+
+#toast-container > div,
+#toast-container > div:hover {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  font-family: Helvetica, sans-serif;
+}
+
+#toast-container > div {
+  opacity: 0.95;
+}
+
+
+/* im: custom gen */
+.#{$app-prefix}editor {
+  background-color: #313131;
+  }
+
+
+/* im: sidebar */
+.#{$app-prefix}block-categories {
+  border-top: 1px solid rgba(0,0,0,0.25);
+  }
+
+  .#{$app-prefix}blocks-no-cat {
+    border:none;
+    }
+
+.#{$app-prefix}block-category .#{$app-prefix}title {
+  color: #{$navItemColor};
+  padding: 10px 10px 10px 20px;
+  background-color: #2c2c2c;
+  }
+
+  .#{$app-prefix}block-category .#{$app-prefix}title:hover {
+    color: #{$navSelectedColor};
+    background-color: #232323;
+    }
+
+.#{$app-prefix}block-category.#{$app-prefix}open .#{$app-prefix}title {
+  color: #{$navSelectedColor};
+  }
+
+.#{$app-prefix}block-category .#{$app-prefix}caret-icon {
+  margin-right: 3px;
+  margin-left: 3px;
+  }
+
+  .#{$app-prefix}block-category.#{$app-prefix}open .#{$app-prefix}caret-icon {
+    margin-right: 2px;
+    margin-left: 1px;
+    }
+
+.#{$app-prefix}blocks-c {
+  padding: 3px;
+  padding-bottom: 18px;
+  }
+
+  .#{$app-prefix}blocks-c:empty {
+    display: none;
+    } 
+
+.#{$app-prefix}block {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0px;
+  margin:5px;
+  width: calc(50% - 10px);
+  box-shadow: none;
+  transition :none;
+  padding: 8px 10px;
+  background-color: #2e2e2e;
+  align-items: center;
+  }
+
+  .#{$app-prefix}block:hover {
+    box-shadow: 0px 0px 6px #000000;
+    border: 1px solid #444444;
+    background-color: #1e1e1e;
+    }
+ 
+/* style manager */
+
+.#{$app-prefix}clm-tags {
+  background-color: #232323;
+  border-top: 1px solid rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+  }
+
+  .gjs-clm-tags #gjs-clm-label {
+    padding-left: 11px;
+    color: #666;
+    }
+
+   /* .gjs-clm-tags #gjs-clm-label::after {
+      content:":";
+      }*/ 
+  
+  #gjs-clm-tags-field.gjs-field {
+    margin: 5px
+    }   
+
+/*#gjs-sm-sectors {
+  border-top: 1px solid rgba(0,0,0,0.25);
+  }*/
+
+
+
+
+  
+.#{$app-prefix}clm-tags #gjs-clm-status-c {
+  margin-right: 5px;
+  margin-bottom: 3px;
+  width: 50%;
+  }
+
+.#{$app-prefix}sm-title {
+  color: #{$navItemColor};
+  padding: 10px 10px 10px 20px;
+  background-color: #2c2c2c;
+  }
+
+  .#{$app-prefix}sm-title:hover {
+    color: #{$navSelectedColor};
+    background-color: #232323;
+    }
+
+.#{$app-prefix}sm-sector.#{$app-prefix}sm-open .#{$app-prefix}sm-title {
+  color: #{$navSelectedColor};
+  }
+
+.#{$app-prefix}sm-sector #gjs-sm-caret {
+  margin-right: 3px;
+  margin-left: 3px;
+  }
+
+  .#{$app-prefix}sm-sector.#{$app-prefix}sm-open #gjs-sm-caret {
+    margin-right: 2px;
+    margin-left: 1px;
+    }
+
+.#{$app-prefix}sm-sector .#{$app-prefix}sm-icon.fa {
+  font-size: 14px;
+  } 
+
+.#{$app-prefix}sm-properties {
+  padding-bottom: 20px;
+  }  
+
+#gjs-sm-position .#{$app-prefix}sm-property.#{$app-prefix}sm-integer {
+  width: 25%
+  }
+
+#gjs-sm-position.#{$app-prefix}sm-property.#{$app-prefix}sm-select {
+  margin-right: 50%
+  }
+
+#gjs-sm-border-radius .#{$app-prefix}sm-property.#{$app-prefix}sm-integer {
+  width: 50%
+  }
+  
+
+#gjs-sm-text-shadow .#{$app-prefix}sm-integer {
+  width: 33%;
+  }
+
+#gjs-sm-dimensions .#{$app-prefix}sm-integer {
+  width: 33%;
+  }
+
+#gjs-sm-display.#{$app-prefix}sm-property.#{$app-prefix}sm-radio {
+  width: 50%;
+  } 
+
+#gjs-sm-font-family {
+  width: 100%;
+  }
+
+#gjs-sm-border-width,
+#gjs-sm-border-style {
+  width: 50%;
+  }
+
+#gjs-sm-border-color {
+  width: 100%;
+  }
+
+
+
+#gjs-sm-text-decoration,
+#gjs-sm-font-style,
+#gjs-sm-flex-direction,
+#gjs-sm-align-items,
+#gjs-sm-box-shadow-color {
+  width: 50%
+  }
+
+/* GradientPicker Styles */
+.gjs-sm-sector .gjs-sm-gradient {
+  width: 100%;
+}
+
+.grp-wrapper {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.grp-handler-close {
+  background-color: #444;
+  color: #ddd;
+}
+
+.grp-handler-cp-wrap {
+  border-color: #444;
+}
+
+.grp-preview,
+.grp-wrapper {
+  border-radius: 3px;
+}
+
+
+/* boton uptload */
+#gjs-sm-background-image .#{$app-prefix}sm-btn {
+  background-color: #67a8e9;
+  color: #222222
+  }
+
+#gjs-sm-background-image .#{$app-prefix}sm-btn:hover {
+    opacity: 0.8;
+    }  
+
+
+/* im: header */
+.#{$app-prefix}pn-panels {
+  /*box-shadow: 0px 0px 10px #111111;*/
+  z-index: 10;
+  position: absolute;
+  width: 100%;
+  background-color: #232323;
+  border-bottom: 1px solid #222;
+  height: 88px;
+  }
+
+// /* header - logo (dahoox) */ 
+// #gjs-pn-logo.#{$app-prefix}pn-panel {
+//   margin: 5px;
+//   margin-left: 8px;
+//   height: 36px;
+//   width: 205px;
+//   border: none;
+//   position: relative;
+//   background-size: 75%;
+//   background-repeat: no-repeat;
+//   background-image: url($logoUrl);
+//   background-color: transparent;
+//   background-position: center left;
+//   }
+
+/* header - logo (inconcert) */ 
+#gjs-pn-logo.#{$app-prefix}pn-panel {
+  margin: 5px;
+  margin-left: 8px;
+  height: 36px;
+  width: 205px;
+  border: none;
+  position: relative;
+  /*background-size: contain;*/
+  background-repeat: no-repeat;
+  background-image: url($logoUrl);
+  background-color: transparent;
+}
+
+/* Panel for Html Tabs */
+.gjs-pn-tabs{
+  display: block;
+  height: 44px;
+  width: calc(100% - 280px);
+  top: 45px;
+  position: absolute;
+  z-index: 1;
+  }
+
+.gjs-pn-tabs .#{$app-prefix}pn-btn
+  { box-sizing: border-box;
+    height: 30px;
+    line-height: 15px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    margin-right: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 7px 14px;
+    display: inline-block;
+    width: auto;
+    font-size: 14px;
+    color: #cccccc;}
+
+.gjs-pn-tabs .#{$app-prefix}pn-btn.active
+  { color:#67a8e9; border: 1px dashed #67a8e9}
+
+.gjs-pn-tabs .#{$app-prefix}pn-btn:hover
+  { color: #ffffff;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.55);
+    border: 1px dashed #ffffff;}
+
+/* Botón para agregar html dentro del diseño */
+.btn-add-html {
+  position: absolute;
+  right: 150px;
+}
+
+/* Botón para editar nombre del html */
+.btn-edit-html-name {
+  position: absolute;
+  right: 100px;
+}
+
+/* Botón para duplicar el html */
+.btn-duplicate-html {
+  position: absolute;
+  right: 50px;
+}
+
+/* Botón para eliminar el html */
+.btn-delete-html {
+  position: absolute;
+  right: 0px;
+}
+
+/* header commands */  
+#gjs-pn-commands.#{$app-prefix}pn-panel {
+  background-color: transparent;
+  width: calc(100% - 280px);
+  }
+
+/* header options */  
+#gjs-pn-options.#{$app-prefix}pn-panel {
+  background-color: transparent;
+  right: 280px;
+  padding: 7px;
+  }
+  
+/* views (header + column) */  
+#gjs-pn-views-container.#{$app-prefix}pn-panel {
+  height: auto;
+  padding: 0px;
+  margin-top: 44px;
+  width: 280px;
+  background-color: #2c2c2c;
+  box-shadow: none;
+
+  top: 0px;
+  bottom: 0px;
+  position: fixed;
+  z-index: 1;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  }
+
+#gjs-pn-views.#{$app-prefix}pn-panel {
+  padding: 0;
+  border: none;
+  width: 280px;
+  height: 44px;
+  background-color: transparent;
+  }
+
+  #gjs-pn-views .#{$app-prefix}pn-btn {
+    margin: 6px;
+    margin-left: 0px;
+    height: 32px;
+    padding: 7px;
+    width: 280px;
+    border-radius: 6px;
+    background-color: #2c2c2c;
+    }
+  
+  #gjs-pn-views .#{$app-prefix}pn-active {
+    /*border-radius: 0;*/
+    background-color: #111111;
+    }
+
+/* layers */
+.#{$app-prefix}layers {
+  height: auto;
+  }
+
+.#{$app-prefix}nv-item .#{$app-prefix}nv-title {
+  color: #{$navItemColor};
+  background-color: #2c2c2c;
+  padding: 4px 10px 6px 30px;
+  }
+
+  .#{$app-prefix}nv-item .#{$app-prefix}nv-title:hover {
+    cursor: default;
+    /*color: #{$navSelectedColor};
+    background-color: #232323;*/
+    }
+  
+  .#{$app-prefix}nv-item.#{$app-prefix}nv-selected > div > .#{$app-prefix}nv-title {
+    background-color: #111111;
+    }
+
+/* canvas */
+.#{$app-prefix}cv-canvas {
+  width: calc(100% - 280px);
+  /*padding-top: 44px;*/
+  height: calc(100% - 88px);
+  top: 88px;
+  }
+
+
+/* im: botones */
+
+.#{$app-prefix}pn-btn {
+  color: #666;
+  border: 1px solid transparent;
+  }
+
+.#{$app-prefix}pn-btn.icon-designer.icon-designer-alldevices {
+  width:auto 
+  }
+  
+.#{$app-prefix}four-color.icon-designer-alldevices {
+  border: 1px dotted #67a8e9;
+  }
+
+
+.#{$app-prefix}four-color.icon-designer-alldevices + .#{$app-prefix}pn-btn.icon-designer,
+.#{$app-prefix}four-color.icon-designer-alldevices + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer,
+.#{$app-prefix}four-color.icon-designer-alldevices + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer,
+.#{$app-prefix}four-color.icon-designer-alldevices + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer + .#{$app-prefix}pn-btn.icon-designer,
+  {
+   /* color:#67a8e9*/
+   border: 1px dotted #666;
+   border-radius: 5px;
+  }
+
+
+
+
+/* im: botones toolbar */
+.#{$app-prefix}btnt.#{$app-prefix}pn-active,
+.#{$app-prefix}pn-btn.#{$app-prefix}pn-active {
+    box-shadow: none;
+    background-color: #111111;
+    border-radius: 5px;
+    }
+
+
+
+
+/* Toolbar - Page Settings - Modal */
+.#{$app-prefix}mdl-dialog{background-color: #ffffff; color: #333}
+.#{$app-prefix}mdl-title{color: $tag-color; font-weight: bold}
+.#{$app-prefix}mdl-dialog-md .#{$app-prefix}mdl-footer{border-top:1px solid rgba(0,0,0,0.2); margin-top: 10px}
+
+.#{$app-prefix}mdl-dialog-md{max-width: 990px;}
+.#{$app-prefix}mdl-dialog-md .form-box{/* background: rgba(0, 0, 0, 0.15); */flex-grow: 1;}
+.#{$app-prefix}mdl-dialog-md .form-col{display: flex; flex-direction: column;}
+.#{$app-prefix}mdl-dialog-md .form-col:first-child{border-right: 1px solid rgba(0,0,0,0.1);}
+
+.#{$app-prefix}mdl-dialog-md .#{$app-prefix}form-label,
+.modal-body .#{$app-prefix}form-label,
+.#{$app-prefix}am-assets-header .#{$app-prefix}form-label,
+.#{$app-prefix}am-file-uploader ##{$app-prefix}am-title{margin-bottom: .3rem; display: block; font-weight: bold; letter-spacing: 0.05em;}
+
+.modal-body .#{$app-prefix}form-label.#{$app-prefix}form-label-small{font-size: .8rem;}
+
+.#{$app-prefix}mdl-dialog-md .text-muted {color: #999!important; font-size: 90%; line-height: 1.3em}
+.#{$app-prefix}mdl-dialog-md .#{$app-prefix}category-title{margin-bottom: 0px; padding-left: 10px; text-transform: uppercase; font-weight: bold; background: none;}
+
+.#{$app-prefix}mdl-dialog-md .form-group{margin-bottom: 25px;}
+.#{$app-prefix}mdl-dialog-md .form-check-label{display: inline-flex;}
+
+.#{$app-prefix}mdl-dialog-md a{color: #67a8e9; display: inline-block;}
+.#{$app-prefix}mdl-dialog-md a:hover{color: #3e648a;}
+
+.#{$app-prefix}btn-prim,
+.#{$app-prefix}mdl-dialog-md form button{cursor: pointer; background-color: #67a8e9; border: 2px solid #67a8e9;color: #ffffff}
+.#{$app-prefix}btn-prim:hover,
+.#{$app-prefix}btn-prim:focus,
+.#{$app-prefix}mdl-dialog-md form button:hover, 
+.#{$app-prefix}mdl-dialog-md form button:focus{ background-color: #3e648a; border-color: #3e648a; }
+
+// Image Modal
+.#{$app-prefix}am-file-uploader>form #gjs-am-uploadFile,
+.#{$app-prefix}am-assets-cont{background-color: #ffffff;}
+
+.#{$app-prefix}am-assets-cont{padding-top: 0px}
+.#{$app-prefix}am-assets-header{ padding: 0px 0px 10px 0px;}
+.#{$app-prefix}am-assets-header form{display: flex; align-items: center; justify-content: space-between; }
+.#{$app-prefix}am-assets{height: 265px;background-color: rgba(0,0,0,0.06); padding: 5px;}
+
+.#{$app-prefix}btn-prim {
+  width: 27% !important;
+  float: none !important;
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+.#{$app-prefix}am-add-asset .#{$app-prefix}am-add-field {
+  width: 70%;
+  float: none;
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+.#{$app-prefix}am-file-uploader>form{background-color: rgba(0,0,0,0.06);}
+.#{$app-prefix}am-file-uploader>form:hover{border-color: $active-color !important ;}
+.#{$app-prefix}am-hover{border-color: $active-color !important ; color :$tag-color !important}
+
+.#{$app-prefix}am-file-uploader ##{$app-prefix}am-title{width: 60%; top: calc(50% - 15px); padding: 0px; left: calc(50% - 30%)}
+
+/* File upload Btn */
+
+.#{$app-prefix}mdl-dialog-md .js .inputfile-img {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.#{$app-prefix}mdl-dialog-md .inputfile-img + label {
+  /* 20px */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  /* 10px 20px */
+  background-color: #ffffff; 
+  border: 2px solid #67a8e9; 
+  color: #67a8e9;
+  margin-bottom: 2px;
+}
+
+.#{$app-prefix}mdl-dialog-md #file-1.inputfile-img{
+  display: none;
+}
+
+.#{$app-prefix}mdl-dialog-md .inputfile-img + label svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  fill: currentColor;
+  margin-top: -0.25em;
+  /* 4px */
+  margin-right: 0.25em;
+  /* 4px */
+}
+
+.#{$app-prefix}mdl-dialog-md .inputfile-img:focus + label,
+.#{$app-prefix}mdl-dialog-md .inputfile-img.has-focus + label,
+.#{$app-prefix}mdl-dialog-md .inputfile-img + label:hover {
+  border-color: #3e648a;
+  color:#3e648a;
+  outline: none;
+  outline: -webkit-focus-ring-color auto 0px;
+}
+
+
+/**/
+
+/* Iconos */
+
+.icon-add-comp::before,
+.icon-comp100::before,
+.icon-comp50::before,
+.icon-comp30::before,
+.icon-rm::before{
+  content: '';
+}
+
+.icon-add-comp {
+  background: url("./img/icon-sq-a.png") no-repeat center;
+}
+
+.icon-comp100 {
+  background: url("./img/icon-sq-1.png") no-repeat center;
+}
+
+.icon-comp50 {
+  background: url("./img/icon-sq-2.png") no-repeat center;
+}
+
+.icon-comp30 {
+  background: url("./img/icon-sq-3.png") no-repeat center;
+}
+
+.icon-rm {
+  background: url("./img/icon-sq-r.png") no-repeat center;
+}
+
+.icons-flex {
+  background-size: 70% 65% !important;
+  height: 15px;
+  /*width: 17px;*/
+  opacity: 0.9;
+}
+
+.icon-dir-row {
+  background: url("./img/flex-dir-row.png") no-repeat center;
+}
+
+.icon-dir-row-rev {
+  background: url("./img/flex-dir-row-rev.png") no-repeat center;
+}
+
+.icon-dir-col {
+  background: url("./img/flex-dir-col.png") no-repeat center;
+}
+
+.icon-dir-col-rev {
+  background: url("./img/flex-dir-col-rev.png") no-repeat center;
+}
+
+.icon-just-start{
+  background: url("./img/flex-just-start.png") no-repeat center;
+}
+
+.icon-just-end{
+  background: url("./img/flex-just-end.png") no-repeat center;
+}
+
+.icon-just-sp-bet{
+  background: url("./img/flex-just-sp-bet.png") no-repeat center;
+}
+
+.icon-just-sp-ar{
+  background: url("./img/flex-just-sp-ar.png") no-repeat center;
+}
+
+.icon-just-sp-cent{
+  background: url("./img/flex-just-sp-cent.png") no-repeat center;
+}
+
+.icon-al-start{
+  background: url("./img/flex-al-start.png") no-repeat center;
+}
+
+.icon-al-end{
+  background: url("./img/flex-al-end.png") no-repeat center;
+}
+
+.icon-al-str{
+  background: url("./img/flex-al-str.png") no-repeat center;
+}
+
+.icon-al-center{
+  background: url("./img/flex-al-center.png") no-repeat center;
+}
+
+/* Fontawesome Icon Blocks*/
+.#{$app-prefix}block.fab, 
+.#{$app-prefix}block.fas, 
+.#{$app-prefix}block.far {
+  font-size: 2em;
+  line-height: 2em;
+  padding: 11px;
+}
+
+/* Blocks Icon Font Set*/
+.gjs-icon-block-label::before {
+  display: block;
+  height: 55px;
+  width: 55px;
+  background-size: contain;
+  opacity: 0.6;
+  margin-bottom: 5px;}
+
+.icon-blocks {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'ic-mas-blocks' !important;
+  /*speak: none;*/
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  font-size: 3.438rem;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Boxed Sections */
+.icon-block-Boxed1:before {
+  content: "\e93e";
+}
+.icon-block-Code:before {
+  content: "\e948";
+}
+.icon-block-Boxed2:before {
+  content: "\e93f";
+}
+.icon-block-Boxed3:before {
+  content: "\e900";
+}
+.icon-block-Boxed4:before {
+  content: "\e901";
+}
+.icon-block-Boxed28:before {
+  content: "\e902";
+}
+.icon-block-Boxed37:before {
+  content: "\e903";
+}
+.icon-block-Boxed73:before {
+  content: "\e904";
+}
+.icon-block-Boxed82:before {
+  content: "\e905";
+}
+.icon-block-Boxed262:before {
+  content: "\e906";
+}
+
+/* FullWidth Sections */
+.icon-block-FullW1:before {
+  content: "\e915";
+}
+.icon-block-FullW2:before {
+  content: "\e916";
+}
+.icon-block-FullW3:before {
+  content: "\e917";
+}
+.icon-block-FullW4:before {
+  content: "\e918";
+}
+.icon-block-FullW28:before {
+  content: "\e919";
+}
+.icon-block-FullW37:before {
+  content: "\e91a";
+}
+.icon-block-FullW73:before {
+  content: "\e91b";
+}
+.icon-block-FullW82:before {
+  content: "\e91c";
+}
+.icon-block-FullW262:before {
+  content: "\e91d";
+}
+
+/* Boxed Navbar */
+.icon-block-NavbarBoxForm:before {
+  content: "\e92c";
+}
+.icon-block-NavbarBoxLeft:before {
+  content: "\e92d";
+}
+.icon-block-NavbarBoxRight:before {
+  content: "\e92e";
+}
+.icon-block-TopNavbarBox:before {
+  content: "\e937";
+}
+
+/* FullWidth Navbar */
+.icon-block-NavbarFwForm:before {
+  content: "\e92f";
+}
+.icon-block-NavbarFwLeft:before {
+  content: "\e930";
+}
+.icon-block-NavbarFwRight:before {
+  content: "\e931";
+}
+.icon-block-TopNavbarFw:before {
+  content: "\e938";
+}
+
+/* Media */
+.icon-block-Image:before {
+  content: "\e91e";
+}
+.icon-block-Video:before {
+  content: "\e939";
+}
+.icon-block-Map:before {
+  content: "\e92a";
+}
+.icon-block-Slider:before {
+  content: "\e933";
+}
+
+.icon-block-Countdown:before {
+  content: "\e94d";
+}
+
+
+/* Form */
+.icon-block-FbtnErase:before {
+  content: "\e90b";
+}
+.icon-block-FbtnSend:before {
+  content: "\e90c";
+}
+.icon-block-Fcheckbox:before {
+  content: "\e90d";
+}
+.icon-block-Finput:before {
+  content: "\e90e";
+}
+.icon-block-Flabel:before {
+  content: "\e90f";
+}
+.icon-block-Fradio:before {
+  content: "\e910";
+}
+.icon-block-Fselect:before {
+  content: "\e911";
+}
+.icon-block-FTermCheck:before {
+  content: "\e912";
+}
+.icon-block-Ftextarea:before {
+  content: "\e913";
+}
+.icon-block-FullForm:before {
+  content: "\e914";
+}
+.icon-block-BasicForm:before {
+  content: "\e93c";
+}
+
+/* Content */
+.icon-block-AddIcon:before {
+  content: "\e94e";
+}
+.icon-block-RoutedLink:before {
+  content: "\e949";
+}
+.icon-block-RoutedNumber:before {
+  content: "\e94a";
+}
+.icon-block-PhoneLink:before {
+  content: "\e94b";
+}
+.icon-block-PhoneNumber:before {
+  content: "\e94c";
+}
+
+.icon-block-BannerBox:before {
+  content: "\e93a";
+}
+.icon-block-BannerFw:before {
+  content: "\e93b";
+}
+.icon-block-BtnOne:before {
+  content: "\e907"; 
+}
+.icon-block-BtnTwo:before {
+  content: "\e908";
+}
+.icon-block-Cards:before {
+  content: "\e909";
+}
+.icon-block-Divider:before {
+  content: "\e90a";
+}
+.icon-block-Link:before {
+  content: "\e91f";
+}
+.icon-block-LinkBlock:before {
+  content: "\e920";
+}
+.icon-block-MobileC2C:before {
+  content: "\e92b";
+}
+.icon-block-Text:before {
+  content: "\e935";
+}
+.icon-block-TextBlock:before {
+  content: "\e936";
+}
+.icon-block-Blockquote:before {
+  content: "\e93d";
+}
+.icon-block-Panel:before {
+  content: "\e932";
+}
+
+/* Lists */
+.icon-block-listDescItem:before {
+  content: "\e921";
+}
+.icon-block-listDescription:before {
+  content: "\e922";
+}
+.icon-block-listInline:before {
+  content: "\e923";
+}
+.icon-block-listItem:before {
+  content: "\e924";
+}
+.icon-block-listMedia:before {
+  content: "\e925";
+}
+.icon-block-listMediaItem:before {
+  content: "\e926";
+}
+.icon-block-listOrdered:before {
+  content: "\e927";
+}
+.icon-block-listUnordered:before {
+  content: "\e928";
+}
+.icon-block-listUnstyled:before {
+  content: "\e929";
+}
+.icon-block-table:before {
+  content: "\e934";
+}
+
+/* Modules */
+
+.icon-block-Intro34FwFormB:before {
+  content: "\e940";
+}
+.icon-block-Intro34FwFormR:before {
+  content: "\e941";
+}
+.icon-block-IntroFullFormB:before {
+  content: "\e942";
+}
+.icon-block-ModuleBoxAbout1:before {
+  content: "\e943";
+}
+.icon-block-ModuleBoxServices1:before {
+  content: "\e944";
+}
+.icon-block-Intro24BoxFormR:before {
+  content: "\e945";
+}
+.icon-block-Intro24FwVideo:before {
+  content: "\e946";
+}
+.icon-block-Intro34FwCta:before {
+  content: "\e947";
+}
+
+// Para que el designer completo (y cada pestaña de responsiveTabs) se ajuste al tamaño de la pantalla
+#gjs, .responsive-tabs-container, .tab-content {
+  height: 100%;
+}
+
+/**********************************************************
+Estilos para el cambio de pestañas dentro del diseñador
+**********************************************************/
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    border-top: none;
+}
+
+.activeTab {
+	display: block;
+}
+
+/* Se coloca esto temporalmente para los campos de configuración popup del page settings*/
+.d-block-column {
+  display: flex;
+}
+
+.input-column {
+  width: 80% !important;
+}
+/*****/

@@ -1,0 +1,32 @@
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <title>d</title>
+  <g>
+    <g>
+      <rect class="cls-1" x="8" y="15.57" width="85" height="18" rx="1" ry="1"/>
+      <rect class="cls-2" x="14" y="21.57" width="3" height="6" rx="1" ry="1"/>
+    </g>
+    <path class="cls-2" d="M14.5,44.73v4h-4v-4h4m2-3h-8a1,1,0,0,0-1,1v8a1,1,0,0,0,1,1h8a1,1,0,0,0,1-1v-8a1,1,0,0,0-1-1Z"/>
+    <path class="cls-2" d="M14.5,59.43v4h-4v-4h4m2-3h-8a1,1,0,0,0-1,1v8a1,1,0,0,0,1,1h8a1,1,0,0,0,1-1v-8a1,1,0,0,0-1-1Z"/>
+    <rect class="cls-2" x="7.5" y="74.43" width="30" height="10" rx="1" ry="1"/>
+    <line class="cls-3" x1="22.5" y1="46.57" x2="56.5" y2="46.57"/>
+    <line class="cls-3" x1="23" y1="61.43" x2="57" y2="61.43"/>
+  </g>
+</svg>

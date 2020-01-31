@@ -1,0 +1,9 @@
+{
+  "migrationDirectory": "migrations",
+  "driver": "mssql",
+  "host": "localhost",
+  "port": 1435,
+  "database": "SpeechAnalytic_Nacho",
+  "username": "sa",
+  "password": "delsenora"
+}

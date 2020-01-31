@@ -1,0 +1,5 @@
+INSERT [dbo].[RolePermissionsGroup] ( [Category], [GroupId],  [TimeStamp]) VALUES ( N'CATEG_GROUP_PLATFORM', N'PERM_GROUP_PLATFORM_ADD', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
+INSERT [dbo].[RolePermissionsGroup] ( [Category], [GroupId],  [TimeStamp]) VALUES ( N'CATEG_GROUP_PLATFORM', N'PERM_GROUP_PLATFORM_EDIT',  CAST(N'2018-05-01T00:00:00.000' AS DateTime))
+INSERT [dbo].[RolePermissionsGroup] ( [Category], [GroupId],  [TimeStamp]) VALUES ( N'CATEG_GROUP_PLATFORM', N'PERM_GROUP_PLATFORM_LIST',  CAST(N'2018-05-01T00:00:00.000' AS DateTime))
+INSERT [dbo].[RolePermissionsGroup] ( [Category], [GroupId],  [TimeStamp]) VALUES ( N'CATEG_GROUP_HOME', N'PERM_GROUP_HOME',  CAST(N'2018-05-01T00:00:00.000' AS DateTime))
+INSERT [dbo].[RolePermissionsGroup] ( [Category], [GroupId],  [TimeStamp]) VALUES ( N'CATEG_GROUP_ACCOUNT', N'PERM_GROUP_ACCOUNT_LIST',  CAST(N'2018-05-01T00:00:00.000' AS DateTime))

@@ -1,0 +1,72 @@
+@font-face {
+  font-family: Open Sans;
+  src: url('../fonts/OpenSans-Regular.ttf');
+}
+
+.ic-btn-floating-chat {
+  display: inline-block;
+  font-weight: normal;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 12px 24px;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+  border-radius: 0;
+  color: #fff;
+  background-color: rgba(0,0,0,0.4);
+  position: fixed;
+  top: 50%;
+  right: 0;
+}
+
+.ic-btn-floating-chat:focus, .ic-btn-floating-chat.focus, .ic-btn-floating-chat:active:focus, .ic-btn-floating-chat:active.focus, .ic-btn-floating-chat.active:focus, .ic-btn-floating-chat.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.ic-btn-floating-chat:focus, .ic-btn-floating-chat:hover {
+  text-decoration: none;
+}
+
+.ic-btn-floating-chat.focus {
+  text-decoration: none;
+}
+
+.ic-btn-floating-chat:active, .ic-btn-floating-chat.active {
+  background-image: none;
+  outline: 0;
+}
+
+.ic-btn-floating-chat.disabled, .ic-btn-floating-chat:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+a.ic-btn-floating-chat.disabled,
+fieldset[disabled] a.ic-btn-floating-chat {
+  pointer-events: none;
+}
+
+.ic-btn-floating-chat:hover,
+.ic-btn-floating-chat:focus,
+.ic-btn-floating-chat:active {
+  color: #fff;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.ic-btn-floating-chat a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.ic-btn-floating-chat a {
+  background-color: transparent;
+}

@@ -1,0 +1,9 @@
+{
+  "migrationDirectory": "migrations",
+  "driver": "mssql",
+  "host": "bch-test-2.ccqn7a0url2n.us-east-1.rds.amazonaws.com",
+  "port": 1433,
+  "database": "SpeechAnalytic",
+  "username": "speech",
+  "password": "Uysm8%ndN.YaWq71P0m"
+}

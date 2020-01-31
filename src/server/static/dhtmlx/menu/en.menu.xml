@@ -1,0 +1,7 @@
+<?xml version='1.0' ?>
+<menu id="0">
+		<item text="New" img=""  id="new"/>	
+		<item text="Edit" img=""  id="edit"/>	
+		<item text="Delete" img=""  id="delete"/>	
+		<item text="Add Query" img=""  id="query"/>	
+</menu>
