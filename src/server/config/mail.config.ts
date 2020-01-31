@@ -1,5 +1,5 @@
 export const MAILSERVER_HOST = '';
-export const MAILSERVER_PORT = ;
+export const MAILSERVER_PORT = 0;
 export const MAILSERVER_USER = '';
 export const MAILSERVER_PASSWORD = '';
 export const MAILSERVER_SENDER_NAME = '';

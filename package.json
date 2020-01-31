@@ -1,6 +1,6 @@
 {
   "name": "intermediate-component-sa",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "test.js",
   "scripts": {

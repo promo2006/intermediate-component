@@ -1,5 +1,0 @@
-INSERT [dbo].[RoutePermission] ( [ID], [GroupId], [Route], [Level], [TimeStamp]) VALUES ( NEWID(), N'PERM_GROUP_ACCOUNT_LIST', N'speechanalytic/account', N'client', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
-INSERT [dbo].[RoutePermission] ( [ID], [GroupId], [Route], [Level], [TimeStamp]) VALUES ( NEWID(), N'PERM_GROUP_PLATFORM_LIST', N'speechanalytic/platform', N'client', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
-INSERT [dbo].[RoutePermission] ( [ID], [GroupId], [Route], [Level], [TimeStamp]) VALUES ( NEWID(), N'PERM_GROUP_PLATFORM_ADD', N'speechanalytic/platform/add', N'client', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
-INSERT [dbo].[RoutePermission] ( [ID], [GroupId], [Route], [Level], [TimeStamp]) VALUES ( NEWID(), N'PERM_GROUP_PLATFORM_EDIT', N'speechanalytic/platform/edit/', N'client', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
-INSERT [dbo].[RoutePermission] ( [ID], [GroupId], [Route], [Level], [TimeStamp]) VALUES ( NEWID(), N'PERM_GROUP_HOME', N'speechanalytic/home', N'client', CAST(N'2018-05-01T00:00:00.000' AS DateTime))
