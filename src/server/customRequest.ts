@@ -1,9 +1,10 @@
 import * as sy from 'systeminformation';
+import * as md5 from 'md5';
 
 //import { CENTRALIZED_API_BASE_URL } from '../config/config';
 import * as request from 'request-promise-native';
 
-import { DummyPromise } from './shared/promises.shared';
+//import { DummyPromise } from './shared/promises.shared';
 
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
@@ -77,7 +78,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
 }
 
 // Método para obtener la información del sistema donde se encuenta instalado.
-function GetSystemInformation(instalationId: string): Promise<any> {
+export function GetSystemInformation(instalationId: string): Promise<any> {
 
     // Definimos variable que contendrá la información del sistema necesaria.
     let systemInformationData: any = {
@@ -132,4 +133,28 @@ function GetSystemInformation(instalationId: string): Promise<any> {
 			return Promise.reject(err);
         }
     );
+}
+
+export function GenerateMD5Content(data: any): string {
+    let result: string = '';
+
+    // Validamos que no sea null.
+    if (data) {
+        // Generamos el contenido de archivo .lic con el formato adecuado y luego lo convertimos en md5.
+        result += data.installationId;
+        result += data.macAddress;
+        result += data.baseboardSerialNumber;
+
+        result = md5(result);
+    }
+
+    // Retornamos contenido en formato md5.
+    return result;
+}
+
+export function DummyPromise(): Promise<boolean> {
+    // Devuelvo promesa dummy que siempre resuelve true
+    return new Promise(function(resolve, reject) {
+        resolve(true);
+    });
 }
