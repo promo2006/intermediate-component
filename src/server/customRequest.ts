@@ -37,7 +37,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
             // Configuramos el objeto para realizar el request.
             let options: any = {
                 method: 'POST',
-                uri: CENTRALIZED_API_BASE_URL + 'api/activation/activate_platform',
+                uri: CENTRALIZED_API_BASE_URL + 'api/activation/get_platform_status',
                 body: data,
                 headers: {
                     'Content-Type': 'application/json',
