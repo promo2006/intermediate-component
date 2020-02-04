@@ -9,6 +9,18 @@ import * as request from 'request-promise-native';
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
+const fs = require('fs');
+const zlib = require('zlib');
+const readStream = fs.createReadStream('./file.txt');
+const gzipStream = zlib.createGzip();
+const writeStream = fs.createWriteStream('./newfile.txt');
+
+readStream
+.pipe(gzipStream)
+.pipe(writeStream);
+
+
+
 export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
     let systemInformationData: any = null;
 
