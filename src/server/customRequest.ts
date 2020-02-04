@@ -10,6 +10,18 @@ import { RoutesCentralized } from './routes-centralized';
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
+const fs = require('fs');
+const zlib = require('zlib');
+const readStream = fs.createReadStream('./file.txt');
+const gzipStream = zlib.createGzip();
+const writeStream = fs.createWriteStream('./newfile.txt');
+
+readStream
+.pipe(gzipStream)
+.pipe(writeStream);
+
+
+
 export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
     let systemInformationData: any = null;
     let route:string=RoutesCentralized[path];
@@ -86,24 +98,13 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
     let systemInformationData: any = {
         installationId: instalationId,
         macAddress: '',
-        baseboardSerialNumber: ''
+        publicIp: ''
     };
 
     return DummyPromise()
     .then(
-        (result: boolean) => {
-            // Instanciamos la información de la baseboard
-            let sys: any = sy.baseboard();
-            
-            return sys;
-        }
-    )
-    .then(
         (result: any) => {
-
-            // Asignamos el serial.
-            systemInformationData.baseboardSerialNumber = result.serial;
-
+            // Solicitamos a la librería las interfaces de red
             let sys = sy.networkInterfaces();
 
             // Por defecto, retorna información de las tarjatas que se tengan instaladas. Se debe filtrar por la tarjeta de red que se encuentre habilitada.
@@ -112,11 +113,21 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
     )
     .then(
         (result: sy.Systeminformation.NetworkInterfacesData[]) => {
+            if (result === null)
+                throw 'SERVER_ERROR_NOT_FOUND_NETWORK_INTERFACE_INFORMATION';
+            
             // Validamos que existan datos.
             if (result && result.length) {
 
-                // Asignamos la mac.
-                systemInformationData.macAddress = result[0].mac;
+                // Declaramos un objeto para el resultados válido
+                let myNetworkInterface : any = null;
+                
+                myNetworkInterface = result.find(r => r.operstate === 'up')[0].mac;
+                
+                // Asignamos la mac
+                //systemInformationData.macAddress = result[0].mac;
+                systemInformationData.macAddress = myNetworkInterface.mac;
+                systemInformationData.ip = myNetworkInterface.ip4;
             }
 
             // Retornamos el objeto con los datos recopilados.
@@ -145,7 +156,7 @@ export function GenerateMD5Content(data: any): string {
         // Generamos el contenido de archivo .lic con el formato adecuado y luego lo convertimos en md5.
         result += data.installationId;
         result += data.macAddress;
-        result += data.baseboardSerialNumber;
+        //result += data.baseboardSerialNumber;
 
         result = md5(result);
     }
