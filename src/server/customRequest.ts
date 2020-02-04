@@ -3,6 +3,7 @@ import * as md5 from 'md5';
 
 //import { CENTRALIZED_API_BASE_URL } from '../config/config';
 import * as request from 'request-promise-native';
+import { RoutesCentralized } from './routes-centralized';
 
 //import { DummyPromise } from './shared/promises.shared';
 
@@ -11,12 +12,13 @@ const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
 export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
     let systemInformationData: any = null;
+    let route:string=RoutesCentralized[path];
 
     return DummyPromise()
     .then(
         result => {
             // Validamos que retorne datos.
-            if (installationId && path && data)  
+            if (installationId && route && data)  
                 // Instanciamos la información del servidor
                 return this.GetSystemInformation(installationId);
             else
@@ -38,7 +40,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
             // Configuramos el objeto para realizar el request.
             let options: any = {
                 method: 'POST',
-                uri: CENTRALIZED_API_BASE_URL + 'api/activation/get_platform_status',
+                uri: CENTRALIZED_API_BASE_URL +route ,
                 body: data,
                 headers: {
                     'Content-Type': 'application/json',
