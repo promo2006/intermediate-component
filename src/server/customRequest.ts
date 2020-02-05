@@ -9,6 +9,7 @@ import * as request from 'request-promise-native';
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
+/*
 const fs = require('fs');
 const zlib = require('zlib');
 const readStream = fs.createReadStream('./file.txt');
@@ -18,8 +19,7 @@ const writeStream = fs.createWriteStream('./newfile.txt');
 readStream
 .pipe(gzipStream)
 .pipe(writeStream);
-
-
+*/
 
 export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
     let systemInformationData: any = null;
@@ -120,7 +120,8 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
                 // Declaramos un objeto para el resultados válido
                 let myNetworkInterface : any = null;
                 
-                myNetworkInterface = result.find(r => r.operstate === 'up')[0].mac;
+                // Recuperamos los datos de la interface de red activa
+                myNetworkInterface = result.filter(r => r.operstate === 'up')[0];
                 
                 // Asignamos la mac
                 //systemInformationData.macAddress = result[0].mac;

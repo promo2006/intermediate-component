@@ -7,14 +7,17 @@ var request = require("request-promise-native");
 //import { DummyPromise } from './shared/promises.shared';
 // Billing.
 var CENTRALIZED_API_BASE_URL = 'http://localhost:9002/';
-var fs = require('fs');
-var zlib = require('zlib');
-var readStream = fs.createReadStream('./file.txt');
-var gzipStream = zlib.createGzip();
-var writeStream = fs.createWriteStream('./newfile.txt');
+/*
+const fs = require('fs');
+const zlib = require('zlib');
+const readStream = fs.createReadStream('./file.txt');
+const gzipStream = zlib.createGzip();
+const writeStream = fs.createWriteStream('./newfile.txt');
+
 readStream
-    .pipe(gzipStream)
-    .pipe(writeStream);
+.pipe(gzipStream)
+.pipe(writeStream);
+*/
 function InconcertRequest(installationId, path, data) {
     var _this = this;
     var systemInformationData = null;
@@ -72,26 +75,28 @@ function GetSystemInformation(instalationId) {
     var systemInformationData = {
         installationId: instalationId,
         macAddress: '',
-        baseboardSerialNumber: ''
+        publicIp: ''
     };
     return DummyPromise()
         .then(function (result) {
-        // Instanciamos la información de la baseboard
-        var sys = sy.baseboard();
-        return sys;
-    })
-        .then(function (result) {
-        // Asignamos el serial.
-        systemInformationData.baseboardSerialNumber = result.serial;
+        // Solicitamos a la librería las interfaces de red
         var sys = sy.networkInterfaces();
         // Por defecto, retorna información de las tarjatas que se tengan instaladas. Se debe filtrar por la tarjeta de red que se encuentre habilitada.
         return sys;
     })
         .then(function (result) {
+        if (result === null)
+            throw 'SERVER_ERROR_NOT_FOUND_NETWORK_INTERFACE_INFORMATION';
         // Validamos que existan datos.
         if (result && result.length) {
-            // Asignamos la mac.
-            systemInformationData.macAddress = result[0].mac;
+            // Declaramos un objeto para el resultados válido
+            var myNetworkInterface = null;
+            // Recuperamos los datos de la interface de red activa
+            myNetworkInterface = result.filter(function (r) { return r.operstate === 'up'; })[0];
+            // Asignamos la mac
+            //systemInformationData.macAddress = result[0].mac;
+            systemInformationData.macAddress = myNetworkInterface.mac;
+            systemInformationData.ip = myNetworkInterface.ip4;
         }
         // Retornamos el objeto con los datos recopilados.
         return Promise.resolve(systemInformationData);
@@ -112,7 +117,7 @@ function GenerateMD5Content(data) {
         // Generamos el contenido de archivo .lic con el formato adecuado y luego lo convertimos en md5.
         result += data.installationId;
         result += data.macAddress;
-        result += data.baseboardSerialNumber;
+        //result += data.baseboardSerialNumber;
         result = md5(result);
     }
     // Retornamos contenido en formato md5.
