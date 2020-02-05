@@ -11,5 +11,11 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_ACCOUNT_GET_BALANCE:'api/account/get_account_balance',
     IC_PARAM_URL_ACCOUNT_GET_VCC:'api/account/get_vccs_by_account',
     IC_PARAM_URL_ACCOUNT_GET_MOVEMENTS:'api/account/get_movements',
-    IC_PARAM_URL_ACCOUNT_GET_COSTS:'api/account/get_costs'
+    IC_PARAM_URL_ACCOUNT_GET_COSTS:'api/account/get_costs',
+    IC_PARAM_URL_API_USERS_GET:'api/api_user/get_api_users/',
+    IC_PARAM_URL_API_USER_SAVE:'api/api_user/save_api_user',
+    IC_PARAM_URL_API_USER_CREATE:'api/api_user/create_api_user',
+    IC_PARAM_URL_API_USER_DELETE:'api/api_user/delete_api_user',
+    IC_PARAM_URL_API_USERS_DELETE:'api/api_user/delete_api_users',
+    IC_PARAM_URL_API_USER_AUTH:'api/api_user/auth'
 };
