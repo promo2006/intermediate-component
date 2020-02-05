@@ -1,8 +1,8 @@
 {
   "name": "intermediate-component-sa",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
-  "main": "customRequest.js",
+  "main": "./server/customRequest.js",
   "scripts": {
     "build": "npm run build.prod",
     "build.dev": "gulp build.dev --color --config-env dev",

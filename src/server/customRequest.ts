@@ -122,7 +122,7 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
                 // Declaramos un objeto para el resultados válido
                 let myNetworkInterface : any = null;
                 
-                myNetworkInterface = result.find(r => r.operstate === 'up')[0].mac;
+                myNetworkInterface = result.filter(r => r.operstate === 'up')[0];
                 
                 // Asignamos la mac
                 //systemInformationData.macAddress = result[0].mac;
@@ -170,4 +170,30 @@ export function DummyPromise(): Promise<boolean> {
     return new Promise(function(resolve, reject) {
         resolve(true);
     });
+}
+
+// Enviamos solicitud.
+export function Login(user: string, password: string): Promise<any> {
+	console.log('Login por API i6', JSON.stringify({ user: user, password: password }));
+	let data = { user: user, password: password };
+	let postOptions = {
+		uri: 'http' + '://cls4-cgn-mia.i6.inconcertcc.com/inconcert/api/login/'
+		, method: 'POST'
+		, body: data
+		, headers: {
+			'Content-Type': 'application/json'
+		}
+		, json: true
+		, strictSSL: false
+	};
+	return request(postOptions)
+		.then((response: any) => {
+			let status = (response && response.status) ? true : false;
+			let message = (response && response) ? response : '';
+			return Promise.resolve({ status: status, accessToken: message.token });
+		})
+		.catch((err: any) => {
+			console.log('Login: Error ' + err.message);
+			return Promise.resolve({ status: false, body: err.message });
+		});
 }
