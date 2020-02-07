@@ -10,8 +10,9 @@ import { RoutesCentralized } from './routes-centralized';
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
+
 /*
-const fs = require('fs');
+
 const zlib = require('zlib');
 const readStream = fs.createReadStream('./file.txt');
 const gzipStream = zlib.createGzip();

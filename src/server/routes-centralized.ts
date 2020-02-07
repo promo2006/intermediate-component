@@ -17,5 +17,6 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_API_USER_CREATE:'api/api_user/create_api_user',
     IC_PARAM_URL_API_USER_DELETE:'api/api_user/delete_api_user',
     IC_PARAM_URL_API_USERS_DELETE:'api/api_user/delete_api_users',
-    IC_PARAM_URL_API_USER_AUTH:'api/api_user/auth'
+    IC_PARAM_URL_API_USER_AUTH:'api/api_user/auth',
+    IC_PARAM_URL_BATCH_SUMMARY_CREATE: 'api/batch/save_batch_summary'
 };

@@ -4,11 +4,31 @@ var sy = require("systeminformation");
 var md5 = require("md5");
 //import { CENTRALIZED_API_BASE_URL } from '../config/config';
 var request = require("request-promise-native");
+var routes_centralized_1 = require("./routes-centralized");
 //import { DummyPromise } from './shared/promises.shared';
 // Billing.
 var CENTRALIZED_API_BASE_URL = 'http://localhost:9002/';
+var fs = require('fs');
+var crypto = require('crypto');
+var secret = 'abcdefg';
+var hash = crypto.createHmac('sha256', secret)
+    .update('Necesito vacaciones')
+    .digest('hex');
+console.log(hash);
+// Verificamos si existe nuestro archivo de registro
+try {
+    if (fs.existsSync('data.txt')) {
+        console.log("The file exists.");
+    }
+    else {
+        console.log('The file does not exist.');
+    }
+}
+catch (err) {
+    console.error(err);
+}
 /*
-const fs = require('fs');
+
 const zlib = require('zlib');
 const readStream = fs.createReadStream('./file.txt');
 const gzipStream = zlib.createGzip();
@@ -21,10 +41,11 @@ readStream
 function InconcertRequest(installationId, path, data) {
     var _this = this;
     var systemInformationData = null;
+    var route = routes_centralized_1.RoutesCentralized[path];
     return DummyPromise()
         .then(function (result) {
         // Validamos que retorne datos.
-        if (installationId && path && data)
+        if (installationId && route && data)
             // Instanciamos la información del servidor
             return _this.GetSystemInformation(installationId);
         else
@@ -41,7 +62,7 @@ function InconcertRequest(installationId, path, data) {
         // Configuramos el objeto para realizar el request.
         var options = {
             method: 'POST',
-            uri: CENTRALIZED_API_BASE_URL + 'api/activation/get_platform_status',
+            uri: CENTRALIZED_API_BASE_URL + route,
             body: data,
             headers: {
                 'Content-Type': 'application/json',
@@ -131,3 +152,28 @@ function DummyPromise() {
     });
 }
 exports.DummyPromise = DummyPromise;
+// Enviamos solicitud.
+function Login(user, password) {
+    console.log('Login por API i6', JSON.stringify({ user: user, password: password }));
+    var data = { user: user, password: password };
+    var postOptions = {
+        uri: 'http' + '://cls4-cgn-mia.i6.inconcertcc.com/inconcert/api/login/',
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        json: true,
+        strictSSL: false
+    };
+    return request(postOptions)
+        .then(function (response) {
+        var status = (response && response.status) ? true : false;
+        var message = (response && response) ? response : '';
+        return Promise.resolve({ status: status, accessToken: message.token });
+    })["catch"](function (err) {
+        console.log('Login: Error ' + err.message);
+        return Promise.resolve({ status: false, body: err.message });
+    });
+}
+exports.Login = Login;
