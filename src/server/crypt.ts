@@ -1,48 +1,57 @@
-const fs = require('fs');
 const crypto = require('crypto');
 
 const algorithm = 'aes192';
 const password = 'abcdefg';
 
-let cipher = crypto.createCipher(algorithm, password);
-let decipher = crypto.createDecipher(algorithm, password);
+export function InconcertEncrypt(myText) : string {
+    let cipher = crypto.createCipher(algorithm, password);
+    let encrypted = '';
+    cipher.on(
+        'readable',
+        () => {
+            const data = cipher.read();
+            if (data) 
+                encrypted += data.toString('hex');
+        }
+    );
+    cipher.on(
+        'end',
+        () => {
+            return encrypted;
+        }
+    );
 
-let encrypted = '';
-cipher.on(
-    'readable',
-    () => {
-        const data = cipher.read();
-        if (data) 
-            encrypted += data.toString('hex');
-    }
-);
-cipher.on(
-    'end',
-    () => {
-        console.log(encrypted);
-    }
-);
+    cipher.write(myText);
+    cipher.end();
 
-let decrypted = '';
-decipher.on(
-    'readable',
-    () => {
-        const data = decipher.read();
-        if (data)
-            decrypted += data.toString('utf8');
-    }
-);
-decipher.on(
-    'end',
-    () => {
-        console.log(decrypted);
-    }
-)
+    return encrypted;
+}
 
-cipher.write('mi mamá me mima');
-cipher.end();
-decipher.write(encrypted, 'hex');
-decipher.end();
+export function InconcertDecrypt(myEncryptedText) : string {
+    let decipher = crypto.createDecipher(algorithm, password);
+    let decrypted = '';
+    decipher.on(
+        'readable',
+        () => {
+            const data = decipher.read();
+            if (data)
+                decrypted += data.toString('utf8');
+        }
+    );
+    decipher.on(
+        'end',
+        () => {
+            return decrypted;
+        }
+    );
+
+    decipher.write(myEncryptedText, 'hex');
+    decipher.end();
+
+    return decrypted;   
+}
+
+ 
 
 /*
 const key = crypto.scryptSync(password, 'salt', '24');

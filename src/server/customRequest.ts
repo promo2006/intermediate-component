@@ -4,6 +4,8 @@ import * as md5 from 'md5';
 //import { CENTRALIZED_API_BASE_URL } from '../config/config';
 import * as request from 'request-promise-native';
 import { RoutesCentralized } from './routes-centralized';
+import { InconcertEncrypt, InconcertDecrypt } from './crypt';
+import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSplitGeneralFileData } from './file';
 
 //import { DummyPromise } from './shared/promises.shared';
 
@@ -11,8 +13,8 @@ import { RoutesCentralized } from './routes-centralized';
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
 
+InconcertExistsGeneralFile();
 /*
-
 const zlib = require('zlib');
 const readStream = fs.createReadStream('./file.txt');
 const gzipStream = zlib.createGzip();
@@ -53,7 +55,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
             // Configuramos el objeto para realizar el request.
             let options: any = {
                 method: 'POST',
-                uri: CENTRALIZED_API_BASE_URL +route ,
+                uri: CENTRALIZED_API_BASE_URL + route ,
                 body: data,
                 headers: {
                     'Content-Type': 'application/json',
