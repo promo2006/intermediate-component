@@ -5,7 +5,11 @@ import * as md5 from 'md5';
 import * as request from 'request-promise-native';
 import { RoutesCentralized } from './routes-centralized';
 import { InconcertEncrypt, InconcertDecrypt } from './crypt';
-import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSplitGeneralFileData } from './file';
+//import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSplitGeneralFileData } from './file';
+
+import * as moment from 'moment';
+
+const fs = require('fs');
 
 //import { DummyPromise } from './shared/promises.shared';
 
@@ -13,7 +17,7 @@ import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSpl
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
 
-InconcertExistsGeneralFile();
+//InconcertExistsGeneralFile();
 /*
 const zlib = require('zlib');
 const readStream = fs.createReadStream('./file.txt');
@@ -27,7 +31,7 @@ readStream
 
 export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
     let systemInformationData: any = null;
-    let route:string=RoutesCentralized[path];
+    let route:string = RoutesCentralized[path];
 
     return DummyPromise()
     .then(
@@ -35,7 +39,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
             // Validamos que retorne datos.
             if (installationId && route && data)  
                 // Instanciamos la información del servidor
-                return this.GetSystemInformation(installationId);
+                return GetSystemInformation(installationId);
             else
                 throw 'SERVER_ERROR_MISSING_REQUIRED_PARAMETERS';
         }
@@ -49,7 +53,7 @@ export function InconcertRequest(installationId : string, path : string, data : 
 
             if (systemInformationData) {
                 // Obtenemos el contenido en formato md5.
-                plaformHash = this.GenerateMD5Content(systemInformationData);
+                plaformHash = GenerateMD5Content(systemInformationData);
             }
 
             // Configuramos el objeto para realizar el request.
@@ -200,4 +204,165 @@ export function Login(user: string, password: string): Promise<any> {
 			console.log('Login: Error ' + err.message);
 			return Promise.resolve({ status: false, body: err.message });
 		});
+}
+
+/***********************************************************************/
+/*****************************File.ts***********************************/
+/***********************************************************************/
+const rootPath : string = '/sq/';
+const generalFilePath : string = rootPath + 'storage/file.txt';
+const segementedFileFolderPath : string = rootPath + 'storage/out/';
+
+// Esta función verifica que exista el archivo de registro general y lo crea en caso no exista
+export function InconcertExistsGeneralFile() : boolean {
+    try {
+        if (fs.existsSync(generalFilePath)) {
+            return true;
+        } else {
+            fs.writeFile(generalFilePath, '',  function(err) {
+                if (err) {
+                    console.error(err);
+                    return false;
+                }
+                console.log("File created!");
+                return true;
+            });
+
+            return true;
+        }
+    } catch(err) {
+        console.error(err)
+        return false;
+    }
+}
+
+// Esta función inserta un registro de texto al archivo de registro principal
+export function InconcertAddDataToGeneralFile(myText : string) : boolean {
+    if (InconcertExistsGeneralFile()) {
+        return InconcertAddTextToFile(generalFilePath, myText);
+    } else {
+        return InconcertAddDataToGeneralFile(myText);
+    }
+}
+
+// Esta función agrega un registro de texto al archivo de registro segmentado
+export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
+    let blockFileNamePath : string = segementedFileFolderPath + moment().format('x') + '.txt';
+    myText.map(
+        s => {
+            InconcertAddTextToFile(blockFileNamePath, s);
+        }
+    );
+
+    return true;
+}
+
+// Esta función agrega un registro de texto al archivo indicado en su input
+export function InconcertAddTextToFile(myFile : string, myText : string) : boolean {
+    try {
+        fs.appendFileSync(myFile, InconcertEncrypt(myText) + '\n');
+    } catch (err) {
+        console.log('Save failed!');
+    }
+
+    return true;
+}
+
+// Esta función genera un archivo por cada 50 registros existentes en el registro principal
+export function InconcertSplitGeneralFileData() : void {
+    // Abrimos el archivo de registro general
+    let data = fs.readFileSync(generalFilePath, 'utf-8');
+    
+    // Cantidad de registros para los archivos segmentados
+    let blockSize = 50;
+
+    let content = data.toString().split('\n');
+    let totalRows = content.filter(r => r.length > 0).length;
+    let blocks = Math.floor(totalRows / blockSize);
+
+    // Hacemos un recorrido para los bloques identificados
+    for (let i = 0; i < blocks; i++) {
+        let blockContent = content.splice(0, blockSize);
+        InconcertAddDataToSegmentedFile(blockContent);
+    }
+
+    fs.writeFileSync(generalFilePath, content.join('\n'), 'utf-8');
+
+    /*
+    fs.readFile(generalFilePath, function (err, data) {
+        if (err) {
+            return console.error(err);
+        }
+        
+        //Cantidad de registros para los archivos segmentados
+        let blockSize = 50;
+
+        let content = data.toString().split('\n');
+        let totalRows = content.filter(r => r.length > 0).length;
+        let blocks = Math.floor(totalRows / blockSize);
+
+        console.log('Total rows: ' + content.length);
+
+        // Hacemos un recorrido para los bloques identificados
+        for (let i = 0; i < blocks; i++) {
+            let blockContent = content.splice(0, blockSize);
+            InconcertAddDataToBlockFile(blockContent);
+
+            console.log(blockContent);
+        }
+
+        console.log('Total rows: ' + content.length);
+    });
+    */
+}
+
+// Esta función envía los archivos contenidos en la carpeta "out" al servicor centralizado
+export function InconcertSegmentedFileUpload(installationId : string) : void {
+    // Declaramos un array de string para almacenar los nombres de los archivos
+    let segmentedFiles : string[] = [];
+
+    // Declarramos un PromiseArray para hacer los envios al centralizado
+    let promises : Promise<boolean>[] = [];
+    
+    // Recuperamos la lista de archivos de la carpeta out
+    fs.readdir(segementedFileFolderPath, function (err, files) {
+        // Agregamos una excepción en caso de error
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        } 
+
+        // Asignamos el resultado a array que declaramos
+        segmentedFiles = files;
+
+        // Recorremos la lista de archivos
+        files.forEach(function (file) {
+            // Establecemos la ruta del archivo de registro segmentado
+            let segmentedFile : string = segementedFileFolderPath + file;
+
+            // Abrimos el archivo de registro segmentado
+            let data = fs.readFileSync(segmentedFile, 'utf-8');
+                
+            // Obtenemos el contenido del archivo de registro segmentado
+            let content = data.toString();
+
+            promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', {'installationId' : installationId, 'data' : data}))
+        });
+    });
+
+    DummyPromise()
+    .then(
+        result => {
+            return Promise.all(promises);
+        }
+    )
+    .then(
+        result => {
+            console.log(result);
+        }
+    )
+    .catch(
+        err => {
+            console.log(err);
+        }
+    );
 }
