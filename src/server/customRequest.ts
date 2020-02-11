@@ -239,7 +239,7 @@ export function InconcertExistsGeneralFile() : boolean {
 // Esta función inserta un registro de texto al archivo de registro principal
 export function InconcertAddDataToGeneralFile(myText : string) : boolean {
     if (InconcertExistsGeneralFile()) {
-        return InconcertAddTextToFile(generalFilePath, myText);
+        return InconcertAddEncryptTextToFile(generalFilePath, myText);
     } else {
         return InconcertAddDataToGeneralFile(myText);
     }
@@ -250,6 +250,7 @@ export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
     let blockFileNamePath : string = segementedFileFolderPath + moment().format('x') + '.txt';
     myText.map(
         s => {
+            // Agregamos el texto extraído directamente al nuevo archivo
             InconcertAddTextToFile(blockFileNamePath, s);
         }
     );
@@ -257,10 +258,21 @@ export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
     return true;
 }
 
-// Esta función agrega un registro de texto al archivo indicado en su input
-export function InconcertAddTextToFile(myFile : string, myText : string) : boolean {
+// Esta función agrega y encripta un registro de texto  al archivo indicado en su input
+export function InconcertAddEncryptTextToFile(myFile : string, myText : string) : boolean {
     try {
         fs.appendFileSync(myFile, InconcertEncrypt(myText) + '\n');
+    } catch (err) {
+        console.log('Save failed!');
+    }
+
+    return true;
+}
+
+// Esta función agrega un registro de texto  al archivo indicado en su input
+export function InconcertAddTextToFile(myFile : string, myText : string) : boolean {
+    try {
+        fs.appendFileSync(myFile, myText + '\n');
     } catch (err) {
         console.log('Save failed!');
     }
@@ -352,12 +364,17 @@ export function InconcertSegmentedFileUpload(installationId : string) : void {
     DummyPromise()
     .then(
         result => {
+            console.log('Enviando promise array');
             return Promise.all(promises);
         }
     )
     .then(
         result => {
-            console.log(result);
+            console.log(result)
+            if (result)
+                console.log(result);
+            else 
+                console.log('fallo')
         }
     )
     .catch(
