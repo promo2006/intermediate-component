@@ -5,9 +5,11 @@ import * as md5 from 'md5';
 import * as request from 'request-promise-native';
 import { RoutesCentralized } from './routes-centralized';
 import { InconcertEncrypt, InconcertDecrypt } from './crypt';
-//import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSplitGeneralFileData } from './file';
-
 import * as moment from 'moment';
+import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
+
+// Importo funciones para manejo de archivos
+import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from '../server/shared/file-manager';
 
 const fs = require('fs');
 
@@ -17,20 +19,8 @@ const fs = require('fs');
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
 
-//InconcertExistsGeneralFile();
-/*
-const zlib = require('zlib');
-const readStream = fs.createReadStream('./file.txt');
-const gzipStream = zlib.createGzip();
-const writeStream = fs.createWriteStream('./newfile.txt');
-
-readStream
-.pipe(gzipStream)
-.pipe(writeStream);
-*/
-
 // Método para hacer el request al servidor centralizado, se recibe el body (data)
-export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
+export function InconcertRequest(installationId : string, path : string, data : any) : Promise<any> {
     let systemInformationData: any = null;
     let route:string = RoutesCentralized[path];
 
@@ -350,86 +340,136 @@ export function InconcertSplitGeneralFileData() : void {
 }
 
 // Esta función envía los archivos contenidos en la carpeta "out" al servicor centralizado
-export function InconcertSegmentedFileUpload(installationId : string) : void {
+export function InconcertSegmentedFileUpload(installationId : string) : Promise<any> {
     // Declaramos un array de string para almacenar los nombres de los archivos
-    let segmentedFiles : string[] = [];
+    let segmentedFiles : any[] = [];
 
-    // Declarramos un PromiseArray para hacer los envios al centralizado
-    let promises : Promise<boolean>[] = [];
+    // Declaramos un objeto para almacenar el resultado de los archivos
+    let segmentedFilesResult : any[] = [];
     
-    // Recuperamos la lista de archivos de la carpeta out
-    fs.readdir(segmentedFileFolderPath, function (err, files) {
-        // Agregamos una excepción en caso de error
-        if (err) {
-            return console.log('Unable to scan directory: ' + err);
-        } 
-
-        // Asignamos el resultado a array que declaramos
-        segmentedFiles = files;
-
-        /*
-        files.reduce( (accumulatorPromise, file) => {
-            return accumulatorPromise.then(() => {
-                console.log("Loop! ${dayjs().format('hh:mm:ss')}");
-
-                // Establecemos la ruta del archivo de registro segmentado
-                let segmentedFile : string = segmentedFileFolderPath + file;
-
-                // Abrimos el archivo de registro segmentado
-                let data = fs.readFileSync(segmentedFile, 'utf-8');
-                    
-                // Obtenemos el contenido del archivo de registro segmentado
-                let content = data.toString();
-
-
-                return InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', {'installationId' : installationId, 'data' : data})
-            });
-        }, Promise.resolve());
-        */
-
-
-        // Recorremos la lista de archivos
-        files.forEach(function (file) {
-            // Establecemos la ruta del archivo de registro segmentado
-            let segmentedFile : string = segmentedFileFolderPath + file;
-
-            // Abrimos el archivo de registro segmentado
-            let data = fs.readFileSync(segmentedFile, 'utf-8');
-                
-            // Obtenemos el contenido del archivo de registro segmentado
-            let content = data.toString();
-
-            // Creamos el objeto que enviaremos al servidor centralizado
-            let body : any = {
-                'installationId' : installationId, 
-                'file' : file,
-                'data' : data
-            }
-
-            promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body))
-        });
-        
-    });
-
-    DummyPromise()
+    return DummyPromise()
     .then(
         result => {
-            console.log('Enviando promise array');
+            return GetFolderTree(segmentedFileFolderPath);
+        }
+    )
+    .then(
+        result => {
+            if (result && result.length > 0 && result[0].children && result[0].children.length > 0) {
+                segmentedFiles = result[0].children;
+
+                // Declarramos un PromiseArray para obtener el contenido de cada archivo
+                let fileContentPromises : Promise<any>[] = [];
+
+                segmentedFiles.map(
+                    f => {
+                        fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
+                    }
+                )
+
+                return Promise.all(fileContentPromises);
+            } else {
+                throw 'SERVER_ERROR_NOT_FOUND_FILE';
+            }
+        }
+    )
+    .then(
+        result => {
+            // Declarramos un PromiseArray para hacer los envios al centralizado
+            let promises : Promise<any>[] = [];
+
+            if (result && result.length > 0) {
+                result.map(
+                    (r, i) => {
+                        // Creamos el objeto que enviaremos al servidor centralizado
+                        let body : any = {
+                            'installationId' : installationId, 
+                            'file' : segmentedFiles[i].name,
+                            'data' : r
+                        }
+
+                        promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body));
+                    }
+                )
+            } else {
+                throw 'SERVER_ERROR_NOT_FOUND_FILE_CONTENT';
+            }
+
             return Promise.all(promises);
         }
     )
     .then(
         result => {
-            console.log('Resultado del promiseArray' + result)
-            if (result)
+            // Almacenamos los resultados de los archivos enviados
+            segmentedFilesResult = result;
+
+            // Declarramos un PromiseArray para los archivos que serán movidos a la carpeta Completed
+            let moveFilepromises : Promise<any>[] = [];
+
+            if (segmentedFilesResult && segmentedFilesResult.length > 0) {
+                segmentedFilesResult.map(
+                    r => {
+                        // Validamos si la operación fue exitosa
+                        if (r.status === true) {
+                            moveFilepromises.push(InconcertSegmentedFileToCompletedFolder(r.data));   
+                        } 
+                    }
+                );
+            } else {
+                throw 'SERVER_ERROR_NOT_RECEIVED_RESULT';
+            }  
+            
+            return Promise.all(moveFilepromises);
+        }
+    )
+    .then(
+        result => {
+            if (result) {
                 console.log(result);
-            else 
-                console.log('fallo')
+
+                Promise.resolve({'res' : true, 'data' : result});
+            }
         }
     )
     .catch(
         err => {
-            console.log(err);
+            Promise.resolve({'res' : false, 'err' : err});
         }
     );
+}
+
+function InconcertSegmentedFileToCompletedFolder(segmentedFileName : string) : Promise<any> {
+    
+    let sourcePath : string = segmentedFileFolderPath + segmentedFileName;
+    let targetPath: string = completedFileFolderPath + segmentedFileName;
+
+    return DummyPromise()
+    .then(
+        result => {
+            return CopyFile(sourcePath, targetPath);
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                return DeleteFile(sourcePath);
+            } else {
+                throw 'SERVER_ERROR_COPY_FILE_FAILED';
+            }
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                Promise.resolve(true);   
+            } else {
+                throw 'SERVER_ERROR_DELET_FILE_FAILED';
+            }
+        }
+    )
+    .catch(
+        err => {
+            Promise.resolve(null);
+        }
+    )
 }
