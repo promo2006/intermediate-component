@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 
 // Importo funciones para manejo de archivos
-import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from '../server/shared/file-manager';
+import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
 
 const fs = require('fs');
 
