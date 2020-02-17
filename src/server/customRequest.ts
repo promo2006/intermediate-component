@@ -263,6 +263,9 @@ export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
                             InconcertAddTextToFile(blockFileUpdateNamePath, s);    
                             break;
                         case 'success': 
+                            completedInsertCounter++
+                            InconcertAddTextToFile(blockFileCompletedNamePath, s);
+                            break;
                         case 'failed': 
                             completedInsertCounter++
                             InconcertAddTextToFile(blockFileCompletedNamePath, s);
