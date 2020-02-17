@@ -172,32 +172,6 @@ export function DummyPromise(): Promise<boolean> {
     });
 }
 
-// Request prototipo para prueba de concepto, será borrado.
-export function Login(user: string, password: string): Promise<any> {
-	console.log('Login por API i6', JSON.stringify({ user: user, password: password }));
-	let data = { user: user, password: password };
-	let postOptions = {
-		uri: 'http' + '://cls4-cgn-mia.i6.inconcertcc.com/inconcert/api/login/'
-		, method: 'POST'
-		, body: data
-		, headers: {
-			'Content-Type': 'application/json'
-		}
-		, json: true
-		, strictSSL: false
-	};
-	return request(postOptions)
-		.then((response: any) => {
-			let status = (response && response.status) ? true : false;
-			let message = (response && response) ? response : '';
-			return Promise.resolve({ status: status, accessToken: message.token });
-		})
-		.catch((err: any) => {
-			console.log('Login: Error ' + err.message);
-			return Promise.resolve({ status: false, body: err.message });
-		});
-}
-
 /***********************************************************************/
 /*****************************File.ts***********************************/
 /***********************************************************************/
@@ -238,22 +212,22 @@ export function InconcertExistsGeneralFile() : boolean {
 }
 
 // Esta función inserta un registro de texto al archivo de registro principal
-export function InconcertAddDataToGeneralFile(myText : string, myTextResult ?: string) : boolean {
+export function InconcertAddDataToGeneralFile(myText : string, myTextStatus ?: string) : boolean {
     // Verifica si existe el archivo de registros general y lo crea de no existir
     if (InconcertExistsGeneralFile()) {
 
-        if (myTextResult !== undefined)
+        if (myTextStatus !== undefined)
             // Ingresamos y escriptamos texto al archivo general
-            return InconcertAddEncryptTextToFile(generalFilePath, myText, myTextResult);
+            return InconcertAddEncryptTextToFile(generalFilePath, myText, myTextStatus);
         else
             // Ingresamos y escriptamos texto al archivo general
             return InconcertAddEncryptTextToFile(generalFilePath, myText);
  
     } else {
 
-        if (myTextResult)
+        if (myTextStatus)
             // Si no existe el archivo de registro general se vuelve a lanzar la función
-            return InconcertAddDataToGeneralFile(myText, myTextResult);
+            return InconcertAddDataToGeneralFile(myText, myTextStatus);
         else 
             // Si no existe el archivo de registro general se vuelve a lanzar la función
             return InconcertAddDataToGeneralFile(myText);
@@ -263,21 +237,37 @@ export function InconcertAddDataToGeneralFile(myText : string, myTextResult ?: s
 // Esta función agrega un registro de texto al archivo de registro segmentado
 export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
     let blockFileNewNamePath : string = segmentedFileFolderPath + moment().format('x') + '-NEW.txt';
+    let blockFileUpdateNamePath : string = segmentedFileFolderPath + moment().format('x') + '-UPDATE.txt';
     let blockFileCompletedNamePath : string = segmentedFileFolderPath + moment().format('x') + '-COMPLETED.txt';
 
     // Declaramos variables para contar los registros de cada archivo
     let newInsertCounter = 0;
+    let updateInsertCounter = 0;
     let completedInsertCounter = 0;
 
     myText.map(
         s => {
             if (s && s.length) {
-                if (s.split('::').length === 1) {
+                let operation = s.split('::');
+                if (operation.length === 1) {
                     newInsertCounter++
                     InconcertAddTextToFile(blockFileNewNamePath, s);
                 } else {
-                    completedInsertCounter++
-                    InconcertAddTextToFile(blockFileCompletedNamePath, s);
+                    switch (operation[1]) {
+                        case 'new':
+                            newInsertCounter++
+                            InconcertAddTextToFile(blockFileNewNamePath, s);
+                            break;
+                        case 'update':
+                            updateInsertCounter++
+                            InconcertAddTextToFile(blockFileUpdateNamePath, s);    
+                            break;
+                        case 'success': 
+                        case 'failed': 
+                            completedInsertCounter++
+                            InconcertAddTextToFile(blockFileCompletedNamePath, s);
+                            break;
+                    }
                 }
             }
         }
@@ -343,6 +333,9 @@ export function InconcertSplitGeneralFileData() : void {
 export function InconcertSegmentedFileUpload(installationId : string) : Promise<any> {
     // Declaramos un array de string para almacenar los nombres de los archivos
     let segmentedFiles : any[] = [];
+    let segmentedNewFiles : any[] = [];
+    let segmentedUpdateFiles : any[] = [];
+    let segmentedCloseFiles : any[] = [];
 
     // Declaramos un objeto para almacenar el resultado de los archivos
     let segmentedFilesResult : any[] = [];
@@ -350,24 +343,32 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
     return DummyPromise()
     .then(
         result => {
+            // Recuperamos los archivos de la carpeta OUT
             return GetFolderTree(segmentedFileFolderPath);
         }
     )
     .then(
         result => {
             if (result && result.length > 0 && result[0].children && result[0].children.length > 0) {
+                // Guardamos en nuestra variable todos los archivos
                 segmentedFiles = result[0].children;
 
+                /*
+                segmentedNewFiles = segmentedFiles.filter(f => f.split('-')[1] = 'new.txt');
+                segmentedUpdateFiles = segmentedFiles.filter(f => f.split('-')[1] = 'update.txt');
+                segmentedCloseFiles = segmentedFiles.filter(f => f.split('-')[1] = 'close.txt');
+                */
+               
                 // Declarramos un PromiseArray para obtener el contenido de cada archivo
-                let fileContentPromises : Promise<any>[] = [];
+                let newFilesContentPromises : Promise<any>[] = [];
 
                 segmentedFiles.map(
                     f => {
-                        fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
+                        segmentedFiles.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
                 )
 
-                return Promise.all(fileContentPromises);
+                return Promise.all(segmentedFiles);
             } else {
                 throw 'SERVER_ERROR_NOT_FOUND_FILE';
             }
@@ -425,7 +426,7 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
     .then(
         result => {
             if (result) {
-                console.log(result);
+                //console.log(result);
 
                 Promise.resolve({'res' : true, 'data' : result});
             }
