@@ -5,9 +5,11 @@ import * as md5 from 'md5';
 import * as request from 'request-promise-native';
 import { RoutesCentralized } from './routes-centralized';
 import { InconcertEncrypt, InconcertDecrypt } from './crypt';
-//import { InconcertExistsGeneralFile, InconcertAddDataToGeneralFile, InconcertSplitGeneralFileData } from './file';
-
 import * as moment from 'moment';
+import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
+
+// Importo funciones para manejo de archivos
+import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from '../server/shared/file-manager';
 
 const fs = require('fs');
 
@@ -17,19 +19,8 @@ const fs = require('fs');
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
 
 
-//InconcertExistsGeneralFile();
-/*
-const zlib = require('zlib');
-const readStream = fs.createReadStream('./file.txt');
-const gzipStream = zlib.createGzip();
-const writeStream = fs.createWriteStream('./newfile.txt');
-
-readStream
-.pipe(gzipStream)
-.pipe(writeStream);
-*/
-
-export function InconcertRequest(installationId : string, path : string, data : any): Promise<any> {
+// Método para hacer el request al servidor centralizado, se recibe el body (data)
+export function InconcertRequest(installationId : string, path : string, data : any) : Promise<any> {
     let systemInformationData: any = null;
     let route:string = RoutesCentralized[path];
 
@@ -114,7 +105,7 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
             // Solicitamos a la librería las interfaces de red
             let sys = sy.networkInterfaces();
 
-            // Por defecto, retorna información de las tarjatas que se tengan instaladas. Se debe filtrar por la tarjeta de red que se encuentre habilitada.
+            // Por defecto, retorna información de las tarjetas que se tengan instaladas. Se debe filtrar por la tarjeta de red que se encuentre habilitada.
             return sys;
         }
     )
@@ -156,6 +147,7 @@ export function GetSystemInformation(instalationId: string): Promise<any> {
     );
 }
 
+// Método para general el platformHash
 export function GenerateMD5Content(data: any): string {
     let result: string = '';
 
@@ -180,51 +172,34 @@ export function DummyPromise(): Promise<boolean> {
     });
 }
 
-// Enviamos solicitud.
-export function Login(user: string, password: string): Promise<any> {
-	console.log('Login por API i6', JSON.stringify({ user: user, password: password }));
-	let data = { user: user, password: password };
-	let postOptions = {
-		uri: 'http' + '://cls4-cgn-mia.i6.inconcertcc.com/inconcert/api/login/'
-		, method: 'POST'
-		, body: data
-		, headers: {
-			'Content-Type': 'application/json'
-		}
-		, json: true
-		, strictSSL: false
-	};
-	return request(postOptions)
-		.then((response: any) => {
-			let status = (response && response.status) ? true : false;
-			let message = (response && response) ? response : '';
-			return Promise.resolve({ status: status, accessToken: message.token });
-		})
-		.catch((err: any) => {
-			console.log('Login: Error ' + err.message);
-			return Promise.resolve({ status: false, body: err.message });
-		});
-}
-
 /***********************************************************************/
 /*****************************File.ts***********************************/
 /***********************************************************************/
+
+// Ruta donde guardaremos los registros txt de Speech & Quality 
 const rootPath : string = '/sq/';
+// Ruta para el archivo de registro general
 const generalFilePath : string = rootPath + 'storage/file.txt';
-const segementedFileFolderPath : string = rootPath + 'storage/out/';
+// Ruta de carpeta para los archivos segmentados pendientes de enviar al servidor centralizado
+const segmentedFileFolderPath : string = rootPath + 'storage/out/';
+// Ruta de carpeta para los archivos segmentados ya enviados y procesados en el servidor centralizado
+const completedFileFolderPath : string = rootPath + 'storage/completed/';
 
 // Esta función verifica que exista el archivo de registro general y lo crea en caso no exista
 export function InconcertExistsGeneralFile() : boolean {
     try {
+        // Verificamos si existe la ruta
         if (fs.existsSync(generalFilePath)) {
             return true;
         } else {
+            // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '',  function(err) {
                 if (err) {
                     console.error(err);
                     return false;
                 }
-                console.log("File created!");
+                
+                // Retornamos true si se creó correctamente
                 return true;
             });
 
@@ -237,30 +212,98 @@ export function InconcertExistsGeneralFile() : boolean {
 }
 
 // Esta función inserta un registro de texto al archivo de registro principal
-export function InconcertAddDataToGeneralFile(myText : string) : boolean {
+export function InconcertAddDataToGeneralFile(myText : string, myTextStatus ?: string) : boolean {
+    // Verifica si existe el archivo de registros general y lo crea de no existir
     if (InconcertExistsGeneralFile()) {
-        return InconcertAddTextToFile(generalFilePath, myText);
+
+        if (myTextStatus !== undefined)
+            // Ingresamos y escriptamos texto al archivo general
+            return InconcertAddEncryptTextToFile(generalFilePath, myText, myTextStatus);
+        else
+            // Ingresamos y escriptamos texto al archivo general
+            return InconcertAddEncryptTextToFile(generalFilePath, myText);
+ 
     } else {
-        return InconcertAddDataToGeneralFile(myText);
+
+        if (myTextStatus)
+            // Si no existe el archivo de registro general se vuelve a lanzar la función
+            return InconcertAddDataToGeneralFile(myText, myTextStatus);
+        else 
+            // Si no existe el archivo de registro general se vuelve a lanzar la función
+            return InconcertAddDataToGeneralFile(myText);
     }
 }
 
 // Esta función agrega un registro de texto al archivo de registro segmentado
 export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
-    let blockFileNamePath : string = segementedFileFolderPath + moment().format('x') + '.txt';
+    let blockFileNewNamePath : string = segmentedFileFolderPath + moment().format('x') + '-NEW.txt';
+    let blockFileUpdateNamePath : string = segmentedFileFolderPath + moment().format('x') + '-UPDATE.txt';
+    let blockFileCompletedNamePath : string = segmentedFileFolderPath + moment().format('x') + '-COMPLETED.txt';
+
+    // Declaramos variables para contar los registros de cada archivo
+    let newInsertCounter = 0;
+    let updateInsertCounter = 0;
+    let completedInsertCounter = 0;
+
     myText.map(
         s => {
-            InconcertAddTextToFile(blockFileNamePath, s);
+            if (s && s.length) {
+                let operation = s.split('::');
+                if (operation.length === 1) {
+                    newInsertCounter++
+                    InconcertAddTextToFile(blockFileNewNamePath, s);
+                } else {
+                    switch (operation[1]) {
+                        case 'new':
+                            newInsertCounter++
+                            InconcertAddTextToFile(blockFileNewNamePath, s);
+                            break;
+                        case 'update':
+                            updateInsertCounter++
+                            InconcertAddTextToFile(blockFileUpdateNamePath, s);    
+                            break;
+                        case 'success': 
+                            completedInsertCounter++
+                            InconcertAddTextToFile(blockFileCompletedNamePath, s);
+                            break;
+                        case 'failed': 
+                            completedInsertCounter++
+                            InconcertAddTextToFile(blockFileCompletedNamePath, s);
+                            break;
+                    }
+                }
+            }
         }
     );
 
     return true;
 }
 
-// Esta función agrega un registro de texto al archivo indicado en su input
+// Esta función agrega y encripta un registro de texto  al archivo indicado en su input
+export function InconcertAddEncryptTextToFile(myFile : string, myText : string, myTextResult ?: string) : boolean {
+    // Declaramos una variable para el texto a insertar
+    let insertText = '';
+
+    // Si existe el input result lo agregamos al final de la cadena de texto
+    if (myTextResult !== undefined) {
+        insertText += InconcertEncrypt(myText) + '::' + myTextResult;
+    } else {
+        insertText += InconcertEncrypt(myText);
+    }
+
+    try {
+        fs.appendFileSync(myFile, insertText + '\n');
+    } catch (err) {
+        console.log('Save failed!');
+    }
+
+    return true;
+}
+
+// Esta función agrega un registro de texto  al archivo indicado en su input
 export function InconcertAddTextToFile(myFile : string, myText : string) : boolean {
     try {
-        fs.appendFileSync(myFile, InconcertEncrypt(myText) + '\n');
+        fs.appendFileSync(myFile, myText + '\n');
     } catch (err) {
         console.log('Save failed!');
     }
@@ -274,11 +317,11 @@ export function InconcertSplitGeneralFileData() : void {
     let data = fs.readFileSync(generalFilePath, 'utf-8');
     
     // Cantidad de registros para los archivos segmentados
-    let blockSize = 50;
+    let blockSize = 4;
 
     let content = data.toString().split('\n');
     let totalRows = content.filter(r => r.length > 0).length;
-    let blocks = Math.floor(totalRows / blockSize);
+    let blocks = Math.ceil(totalRows / blockSize);
 
     // Hacemos un recorrido para los bloques identificados
     for (let i = 0; i < blocks; i++) {
@@ -287,82 +330,150 @@ export function InconcertSplitGeneralFileData() : void {
     }
 
     fs.writeFileSync(generalFilePath, content.join('\n'), 'utf-8');
-
-    /*
-    fs.readFile(generalFilePath, function (err, data) {
-        if (err) {
-            return console.error(err);
-        }
-        
-        //Cantidad de registros para los archivos segmentados
-        let blockSize = 50;
-
-        let content = data.toString().split('\n');
-        let totalRows = content.filter(r => r.length > 0).length;
-        let blocks = Math.floor(totalRows / blockSize);
-
-        console.log('Total rows: ' + content.length);
-
-        // Hacemos un recorrido para los bloques identificados
-        for (let i = 0; i < blocks; i++) {
-            let blockContent = content.splice(0, blockSize);
-            InconcertAddDataToBlockFile(blockContent);
-
-            console.log(blockContent);
-        }
-
-        console.log('Total rows: ' + content.length);
-    });
-    */
 }
 
 // Esta función envía los archivos contenidos en la carpeta "out" al servicor centralizado
-export function InconcertSegmentedFileUpload(installationId : string) : void {
+export function InconcertSegmentedFileUpload(installationId : string) : Promise<any> {
     // Declaramos un array de string para almacenar los nombres de los archivos
-    let segmentedFiles : string[] = [];
+    let segmentedFiles : any[] = [];
+    let segmentedNewFiles : any[] = [];
+    let segmentedUpdateFiles : any[] = [];
+    let segmentedCloseFiles : any[] = [];
 
-    // Declarramos un PromiseArray para hacer los envios al centralizado
-    let promises : Promise<boolean>[] = [];
+    // Declaramos un objeto para almacenar el resultado de los archivos
+    let segmentedFilesResult : any[] = [];
     
-    // Recuperamos la lista de archivos de la carpeta out
-    fs.readdir(segementedFileFolderPath, function (err, files) {
-        // Agregamos una excepción en caso de error
-        if (err) {
-            return console.log('Unable to scan directory: ' + err);
-        } 
-
-        // Asignamos el resultado a array que declaramos
-        segmentedFiles = files;
-
-        // Recorremos la lista de archivos
-        files.forEach(function (file) {
-            // Establecemos la ruta del archivo de registro segmentado
-            let segmentedFile : string = segementedFileFolderPath + file;
-
-            // Abrimos el archivo de registro segmentado
-            let data = fs.readFileSync(segmentedFile, 'utf-8');
-                
-            // Obtenemos el contenido del archivo de registro segmentado
-            let content = data.toString();
-
-            promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', {'installationId' : installationId, 'data' : data}))
-        });
-    });
-
-    DummyPromise()
+    return DummyPromise()
     .then(
         result => {
+            // Recuperamos los archivos de la carpeta OUT
+            return GetFolderTree(segmentedFileFolderPath);
+        }
+    )
+    .then(
+        result => {
+            if (result && result.length > 0 && result[0].children && result[0].children.length > 0) {
+                // Guardamos en nuestra variable todos los archivos
+                segmentedFiles = result[0].children;
+
+                /*
+                segmentedNewFiles = segmentedFiles.filter(f => f.split('-')[1] = 'new.txt');
+                segmentedUpdateFiles = segmentedFiles.filter(f => f.split('-')[1] = 'update.txt');
+                segmentedCloseFiles = segmentedFiles.filter(f => f.split('-')[1] = 'close.txt');
+                */
+               
+                // Declarramos un PromiseArray para obtener el contenido de cada archivo
+                let newFilesContentPromises : Promise<any>[] = [];
+
+                segmentedFiles.map(
+                    f => {
+                        segmentedFiles.push(ReadFileContent(f.fullPath, 'utf8'));
+                    }
+                )
+
+                return Promise.all(segmentedFiles);
+            } else {
+                throw 'SERVER_ERROR_NOT_FOUND_FILE';
+            }
+        }
+    )
+    .then(
+        result => {
+            // Declarramos un PromiseArray para hacer los envios al centralizado
+            let promises : Promise<any>[] = [];
+
+            if (result && result.length > 0) {
+                result.map(
+                    (r, i) => {
+                        // Creamos el objeto que enviaremos al servidor centralizado
+                        let body : any = {
+                            'installationId' : installationId, 
+                            'file' : segmentedFiles[i].name,
+                            'data' : r
+                        }
+
+                        promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body));
+                    }
+                )
+            } else {
+                throw 'SERVER_ERROR_NOT_FOUND_FILE_CONTENT';
+            }
+
             return Promise.all(promises);
         }
     )
     .then(
         result => {
-            console.log(result);
+            // Almacenamos los resultados de los archivos enviados
+            segmentedFilesResult = result;
+
+            // Declarramos un PromiseArray para los archivos que serán movidos a la carpeta Completed
+            let moveFilepromises : Promise<any>[] = [];
+
+            if (segmentedFilesResult && segmentedFilesResult.length > 0) {
+                segmentedFilesResult.map(
+                    r => {
+                        // Validamos si la operación fue exitosa
+                        if (r.status === true) {
+                            moveFilepromises.push(InconcertSegmentedFileToCompletedFolder(r.data));   
+                        } 
+                    }
+                );
+            } else {
+                throw 'SERVER_ERROR_NOT_RECEIVED_RESULT';
+            }  
+            
+            return Promise.all(moveFilepromises);
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                //console.log(result);
+
+                Promise.resolve({'res' : true, 'data' : result});
+            }
         }
     )
     .catch(
         err => {
-            console.log(err);
+            Promise.resolve({'res' : false, 'err' : err});
         }
     );
+}
+
+function InconcertSegmentedFileToCompletedFolder(segmentedFileName : string) : Promise<any> {
+    
+    let sourcePath : string = segmentedFileFolderPath + segmentedFileName;
+    let targetPath: string = completedFileFolderPath + segmentedFileName;
+
+    return DummyPromise()
+    .then(
+        result => {
+            return CopyFile(sourcePath, targetPath);
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                return DeleteFile(sourcePath);
+            } else {
+                throw 'SERVER_ERROR_COPY_FILE_FAILED';
+            }
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                Promise.resolve(true);   
+            } else {
+                throw 'SERVER_ERROR_DELET_FILE_FAILED';
+            }
+        }
+    )
+    .catch(
+        err => {
+            Promise.resolve(null);
+        }
+    )
 }
