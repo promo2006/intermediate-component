@@ -363,15 +363,15 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 */
                
                 // Declarramos un PromiseArray para obtener el contenido de cada archivo
-                let newFilesContentPromises : Promise<any>[] = [];
+                let fileContentPromises : Promise<any>[] = [];
 
                 segmentedFiles.map(
                     f => {
-                        segmentedFiles.push(ReadFileContent(f.fullPath, 'utf8'));
+                        fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
                 )
 
-                return Promise.all(segmentedFiles);
+                return Promise.all(fileContentPromises);
             } else {
                 throw 'SERVER_ERROR_NOT_FOUND_FILE';
             }
