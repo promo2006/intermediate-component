@@ -1,3 +1,6 @@
+import * as log4js from 'log4js';
+import { LOGGER_CONFIG } from './config/logger.config';
+
 import * as sy from 'systeminformation';
 import * as md5 from 'md5';
 
@@ -10,6 +13,12 @@ import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 
 // Importo funciones para manejo de archivos
 import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
+
+// Inicializo los logs
+log4js.configure(LOGGER_CONFIG);
+
+// Obtengo logger
+let logger: log4js.Logger = log4js.getLogger('ServerScripts');
 
 const fs = require('fs');
 
@@ -176,6 +185,26 @@ export function DummyPromise(): Promise<boolean> {
 /*****************************File.ts***********************************/
 /***********************************************************************/
 
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a34786324a0ad8081eae4ac466e8bdc513601d82900d513b78bc17f5c9edc8cf198dfed08b117fcdd12931e419f5641ec85e1aacfa85a62e0a25a66ee711913969582e'));
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a3478697e7800365ca7fcc190fca1c4f54a643bb1f73ea19432babc28a76fdf45476ef58c87befd249bd2796f7669c5867caa1cab68192fcf06beb56c05e435ebd7223'));
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a34786524d0cbf85f3874ba6a8de04df7a48291e9ac534fa03f45f7b827f63b483ca3add5345f2c92ba16181528811254eb2c2b57d1a7a6042974478fabeb9e014eea2'));
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a3478679fa3c22f8817708e6e33ecd1d110a26985a3af3ba0201391da44ec6c5b47dd1707efc2d6f74467ae215fb1d176d82e0dc3cb59d9fb7316792219cfd2e5edb4a'));
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a347868836136a382cde51d3f8e4dd95818b9e05c36c68470a56b35bf2e2b4ca0aa3efe36c676fda9636bc64eaafd96e7c2f225092098573d9bcb0b6f140a32e259fe9'));
+console.log(InconcertDecrypt('63db286607f7a5b1856aacb704ccffe006c80928186fc2e60d83ee29bf39720a7796aa51a78d991f4eebb963f66662aef2d427074a5d9eca0301b9c4c3a34786c36475c9aff0ad2216ef9a99ef1cb99af4a8f09f08f9dd932496826cdbb7c3dfd72635f93048ab1b9707b4ab0b6bb56f062f0c97a00b03ce8815b6a6334a2042'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c17ce6d5c052f99eca3c67e806516adcb937bf9937dba32ba6fdbca26eab3ebcb0d60a156d73804b727d4d3711d51d8a7b6be309ddd345fae6d976b57f7fd3812202983ca596fec5702c8451d5089a911c7ba3c9e36caba7505bde3d0e1c2d3318'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb7f328ccad4a6ba12cd002b357ad32629b9f7ff809e4406e75f2de25b207887a6'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ece4d24313e500f233040e6e0222ff9d1558d5242a5cdbcf38834030c978423a89cd2b63821dbfb3c80f3b72b96b7c40c1771faddbb14053ae346db241307ab1bd40176bd8688f04352edc65eae506ce82241d29c6ff595adde4e3478b0a864626ee9ae11fe9b55ca457f9bbffd50dfaeb6822c4caea4f441c7641bbc878169d7f6b545e62b9c8f3901df59faaa549da97'));
+
 // Ruta donde guardaremos los registros txt de Speech & Quality 
 const rootPath : string = '/sq/';
 // Ruta para el archivo de registro general
@@ -192,6 +221,9 @@ export function InconcertExistsGeneralFile() : boolean {
         if (fs.existsSync(generalFilePath)) {
             return true;
         } else {
+
+            logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
+
             // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '',  function(err) {
                 if (err) {
@@ -365,8 +397,12 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 // Declarramos un PromiseArray para obtener el contenido de cada archivo
                 let fileContentPromises : Promise<any>[] = [];
 
+                // Recorremos el listado de archivos segmentados
                 segmentedFiles.map(
                     f => {
+
+                        logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
+
                         fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
                 )

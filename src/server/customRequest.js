@@ -1,5 +1,7 @@
 "use strict";
 exports.__esModule = true;
+var log4js = require("log4js");
+var logger_config_1 = require("./config/logger.config");
 var sy = require("systeminformation");
 var md5 = require("md5");
 //import { CENTRALIZED_API_BASE_URL } from '../config/config';
@@ -9,6 +11,10 @@ var crypt_1 = require("./crypt");
 var moment = require("moment");
 // Importo funciones para manejo de archivos
 var file_manager_1 = require("./shared/file-manager");
+// Inicializo los logs
+log4js.configure(logger_config_1.LOGGER_CONFIG);
+// Obtengo logger
+var logger = log4js.getLogger('ServerScripts');
 var fs = require('fs');
 //import { DummyPromise } from './shared/promises.shared';
 // Billing.
@@ -166,6 +172,7 @@ function InconcertExistsGeneralFile() {
             return true;
         }
         else {
+            logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
             // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '', function (err) {
                 if (err) {
@@ -319,7 +326,9 @@ function InconcertSegmentedFileUpload(installationId) {
             */
             // Declarramos un PromiseArray para obtener el contenido de cada archivo
             var fileContentPromises_1 = [];
+            // Recorremos el listado de archivos segmentados
             segmentedFiles.map(function (f) {
+                logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
                 fileContentPromises_1.push(file_manager_1.ReadFileContent(f.fullPath, 'utf8'));
             });
             return Promise.all(fileContentPromises_1);
