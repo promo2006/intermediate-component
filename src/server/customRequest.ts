@@ -1,3 +1,6 @@
+import * as log4js from 'log4js';
+import { LOGGER_CONFIG } from './config/logger.config';
+
 import * as sy from 'systeminformation';
 import * as md5 from 'md5';
 
@@ -6,10 +9,15 @@ import * as request from 'request-promise-native';
 import { RoutesCentralized } from './routes-centralized';
 import { InconcertEncrypt, InconcertDecrypt } from './crypt';
 import * as moment from 'moment';
-import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 
 // Importo funciones para manejo de archivos
 import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
+
+// Inicializo los logs
+log4js.configure(LOGGER_CONFIG);
+
+// Obtengo logger
+let logger: log4js.Logger = log4js.getLogger('ServerScripts');
 
 const fs = require('fs');
 
@@ -172,9 +180,18 @@ export function DummyPromise(): Promise<boolean> {
     });
 }
 
+export function SleepPromise(secondTime: number): Promise<boolean> {
+    // Devuelvo promesa dummy que siempre resuelve true
+    return new Promise(function(resolve, reject) {
+        setTimeout(resolve,(1000 * secondTime));
+    });
+}
+
+
 /***********************************************************************/
 /*****************************File.ts***********************************/
 /***********************************************************************/
+
 
 // Ruta donde guardaremos los registros txt de Speech & Quality 
 const rootPath : string = '/sq/';
@@ -192,6 +209,9 @@ export function InconcertExistsGeneralFile() : boolean {
         if (fs.existsSync(generalFilePath)) {
             return true;
         } else {
+
+            logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
+
             // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '',  function(err) {
                 if (err) {
@@ -305,6 +325,18 @@ export function InconcertAddTextToFile(myFile : string, myText : string) : boole
     try {
         fs.appendFileSync(myFile, myText + '\n');
     } catch (err) {
+        // Generamos el archivo de la ruta general
+        fs.writeFile(myFile, '',  function(err) {
+            if (err) {
+                console.error(err);
+                return false;
+            }
+            
+            // Retornamos true si se creó correctamente
+            return true;
+        });
+
+        InconcertAddTextToFile(myFile, myText);
         console.log('Save failed!');
     }
 
@@ -365,8 +397,12 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 // Declarramos un PromiseArray para obtener el contenido de cada archivo
                 let fileContentPromises : Promise<any>[] = [];
 
+                // Recorremos el listado de archivos segmentados
                 segmentedFiles.map(
                     f => {
+
+                        logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
+
                         fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
                 )
@@ -379,6 +415,8 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
     )
     .then(
         result => {
+            let arrSummary : any[] = [];
+
             // Declarramos un PromiseArray para hacer los envios al centralizado
             let promises : Promise<any>[] = [];
 
@@ -392,16 +430,19 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                             'data' : r
                         }
 
-                        promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body));
+                        arrSummary.push(body);
+                        //promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body));
                     }
                 )
             } else {
                 throw 'SERVER_ERROR_NOT_FOUND_FILE_CONTENT';
             }
 
-            return Promise.all(promises);
+            return InconcertSegmenteFileRecursiveSend(arrSummary);
+            //return Promise.all(promises);
         }
     )
+    /*
     .then(
         result => {
             // Almacenamos los resultados de los archivos enviados
@@ -426,13 +467,13 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
             return Promise.all(moveFilepromises);
         }
     )
+    */
     .then(
         result => {
-            if (result) {
-                //console.log(result);
-
+            if (result && result.status) {
                 Promise.resolve({'res' : true, 'data' : result});
-            }
+            } else 
+                throw 'SERVER_ERROR_MASSIVE_UPLOAD_FAILED';
         }
     )
     .catch(
@@ -440,6 +481,66 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
             Promise.resolve({'res' : false, 'err' : err});
         }
     );
+}
+
+// Función recursiva para enviar los request al servidor centralizado
+function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
+    // El array de entrada contiene { 'installationId' : installationId, 'file' : fileName, 'data' : fileTxtContent}
+
+    // Retiramos un item del array de objetos para trabajar
+    let myBody : any = arrSummary.shift();
+
+    // consulto si tenemos datos en la cola
+    return SleepPromise(1)
+    .then(
+        result => {
+            logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
+
+            // Lanzamos el request al servidor centralizado
+            return InconcertRequest(myBody.installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', myBody);
+        }
+    )
+    .then(
+        result => {
+            // El servidor centralizado retorna en respuesta el estado y nombre del archivo
+            if (result === null)
+                throw 'SERVER_ERROR_NOT_RECEIVED_RESULT';
+
+            // Si el resultado del servidor es falso retornamos un throw
+            if (result.status !== true) {
+                throw 'SERVER_ERROR_FILE_UPLOAD_FAILED';
+
+            // Si la respuesta es true movemos el archivo a la carpeta Completed
+            } else {
+                logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Moving file to Completed folder: ' + myBody.file + '::' + result.data);
+
+                // Movemos el archivo a la carpeta Completed
+                return InconcertSegmentedFileToCompletedFolder(result.data);   
+            }
+        }
+    )
+    .then(
+        result => {
+            if (result) {
+                if (arrSummary.length > 0) {
+                    logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Launching recursice function: ' + arrSummary.length);
+                    
+                    return InconcertSegmenteFileRecursiveSend(arrSummary);
+                } else 
+                    return Promise.resolve({'res' : true, 'data' : result});
+            } else {
+                throw 'SERVER_ERROR_FILE_MOVE_FAILED';
+            }
+        }
+    )
+    .catch(
+        err => {
+            logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
+
+            Promise.resolve({'res' : false, 'err' : err});
+        }
+    )
+
 }
 
 function InconcertSegmentedFileToCompletedFolder(segmentedFileName : string) : Promise<any> {
@@ -465,15 +566,15 @@ function InconcertSegmentedFileToCompletedFolder(segmentedFileName : string) : P
     .then(
         result => {
             if (result) {
-                Promise.resolve(true);   
+                return Promise.resolve(true);   
             } else {
-                throw 'SERVER_ERROR_DELET_FILE_FAILED';
+                throw 'SERVER_ERROR_DELETE_FILE_FAILED';
             }
         }
     )
     .catch(
         err => {
-            Promise.resolve(null);
+            return Promise.resolve(false);
         }
     )
 }
