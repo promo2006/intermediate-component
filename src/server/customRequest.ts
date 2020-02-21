@@ -1,5 +1,5 @@
-import * as log4js from 'log4js';
-import { LOGGER_CONFIG } from './config/logger.config';
+//import * as log4js from 'log4js';
+//import { LOGGER_CONFIG } from './config/logger.config';
 
 import * as sy from 'systeminformation';
 import * as md5 from 'md5';
@@ -14,10 +14,10 @@ import * as moment from 'moment';
 import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
 
 // Inicializo los logs
-log4js.configure(LOGGER_CONFIG);
+//log4js.configure(LOGGER_CONFIG);
 
 // Obtengo logger
-let logger: log4js.Logger = log4js.getLogger('ServerScripts');
+//let logger: log4js.Logger = log4js.getLogger('ServerScripts');
 
 const fs = require('fs');
 
@@ -25,6 +25,7 @@ const fs = require('fs');
 
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
+//const CENTRALIZED_API_BASE_URL: string = 'https://billing-test.inconcertcc.com/';
 
 
 // Método para hacer el request al servidor centralizado, se recibe el body (data)
@@ -210,7 +211,7 @@ export function InconcertExistsGeneralFile() : boolean {
             return true;
         } else {
 
-            logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
+            //logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
 
             // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '',  function(err) {
@@ -401,7 +402,7 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 segmentedFiles.map(
                     f => {
 
-                        logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
+                        //logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
 
                         fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
@@ -494,7 +495,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     return SleepPromise(1)
     .then(
         result => {
-            logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
+            //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
 
             // Lanzamos el request al servidor centralizado
             return InconcertRequest(myBody.installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', myBody);
@@ -512,7 +513,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
 
             // Si la respuesta es true movemos el archivo a la carpeta Completed
             } else {
-                logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Moving file to Completed folder: ' + myBody.file + '::' + result.data);
+                //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Moving file to Completed folder: ' + myBody.file + '::' + result.data);
 
                 // Movemos el archivo a la carpeta Completed
                 return InconcertSegmentedFileToCompletedFolder(result.data);   
@@ -523,7 +524,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
         result => {
             if (result) {
                 if (arrSummary.length > 0) {
-                    logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Launching recursice function: ' + arrSummary.length);
+                    //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Launching recursice function: ' + arrSummary.length);
                     
                     return InconcertSegmenteFileRecursiveSend(arrSummary);
                 } else 
@@ -535,7 +536,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     )
     .catch(
         err => {
-            logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
+            //logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
 
             Promise.resolve({'res' : false, 'err' : err});
         }
