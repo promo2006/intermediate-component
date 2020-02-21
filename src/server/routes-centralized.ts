@@ -21,5 +21,6 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_BATCH_SUMMARY_CREATE: 'api/batch/save_batch_summary',
     IC_PARAM_URL_BATCH_DETAIL_SAVE: 'api/batch/save_batch_detail',
     IC_PARAM_URL_REPORT_GET_PARAMETERS:'api/report/get_report_procedure_parameters',
-    IC_PARAM_URL_REPORT_EXECUTE:'api/report/execute_report'
+    IC_PARAM_URL_REPORT_EXECUTE:'api/report/execute_report',
+    IC_PARAM_URL_PLATFORM_INSTALLATION_DATA:'api/platform/get_installation_ids/'
 };
