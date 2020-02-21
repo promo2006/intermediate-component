@@ -1,5 +1,5 @@
-import * as log4js from 'log4js';
-import { LOGGER_CONFIG } from './config/logger.config';
+//import * as log4js from 'log4js';
+//import { LOGGER_CONFIG } from './config/logger.config';
 
 import * as sy from 'systeminformation';
 import * as md5 from 'md5';
@@ -13,11 +13,21 @@ import * as moment from 'moment';
 // Importo funciones para manejo de archivos
 import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
 
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc6aa5220dbc8fe936124cef6b4de26f78c1bee5dce9a7ee4de1f985fe056775d7d6b62a2b80b835744b7474c2d45700352aa2593fe30fe999e28124a2eae7b22d42eda3710b42893f5dd58bdfea62c746d'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc679556e85a60b1dac57cd22b9a24cbcb6cc5f65f3fbc874c2f58e2d9c78f55cc31ae16829aef0a32c941acc9e1e7180b0ea4f8d87d2c909125b406afa004f08ff04d0fd02824c17993244ebeaa4597506'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc6a98b71e4e6cddf511f26b15640d6ee64ec25eecae97857bedba106b1dd1215273a514f647f8f61422312730b908a787a1cc9766076d27a9fc5b02579ccb2c259477fb9c4d171bba0cc1b377429afbb17'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc62009d4982d1870b0aecb0d819e0358c3f21f319176ea6451d6c2f7f52fe3aabd6e79ae377f7fde9e04375c183abb69dac280f6cf7677800e0694a3b70322c44fabb6436eb423a8dc9249e5f57e6b1a15'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc62ff4f277b33ba8351c9be66f8a8a84b5ab2cab2109fa7e63cc741db89cdafa9d1f6b948fd5d83435ebc9df05659602535a7781cfaa9e29db0bc71b6f1bad8ed76d560104c32e874571bb97645497d305'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc6f16d6147cc4e39a8a868e9ff82658c9e9212097171ad346fbcf11cd79b11698a4371d833bec0909c82438966b7493e6340122ae89c0461297d0cddfcd5736ed7f1cf777d665e3f99afbd605ad03d22f4'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc6b697f4bf6e02b0d33861b77f7f421f236fe68df10dcc9e651ce7840403503f564b53ca18ca154c36eb88c31ff113f6fb1b8be344c37af04bbe84cfa47411cdb29946733fdd32760a16f0cedbfc847e8c'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc679556e85a60b1dac57cd22b9a24cbcb6cc5f65f3fbc874c2f58e2d9c78f55cc3db85a476ca72fb5064aba7c2435b21a8f2e9319441ee92484d4eb7b2baefc07db72ed84e586d48b3bb2d48e9ece9c9f3'));
+console.log(InconcertDecrypt('4ecc10adf214d7b7142ead24fe13f3ec9adf9786972fb9ce58ff71b9159f8bb7afb15dea87ca82ef908acf19b1f62d9712a1b44623d6c92550e588f882260ac5d4c65da8c5063c7a6ec41d62baecefc694bac561cd0b36ed24b197bd0749293d8e1dcd828de24d57480c986da02162fe2e362d8c77c6e5683855a3209186fa90b25eaffa4303dfbf548b85a24f3c32f73891195f2cdbbff16bda03f4ea00df04'));
+
 // Inicializo los logs
-log4js.configure(LOGGER_CONFIG);
+//log4js.configure(LOGGER_CONFIG);
 
 // Obtengo logger
-let logger: log4js.Logger = log4js.getLogger('ServerScripts');
+//let logger: log4js.Logger = log4js.getLogger('ServerScripts');
 
 const fs = require('fs');
 
@@ -25,6 +35,7 @@ const fs = require('fs');
 
 // Billing.
 const CENTRALIZED_API_BASE_URL: string = 'http://localhost:9002/';
+//const CENTRALIZED_API_BASE_URL: string = 'https://billing-test.inconcertcc.com/';
 
 
 // Método para hacer el request al servidor centralizado, se recibe el body (data)
@@ -210,7 +221,7 @@ export function InconcertExistsGeneralFile() : boolean {
             return true;
         } else {
 
-            logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
+            //logger.info('[IntermediateComponent::InconcertExistsGeneralFile] Writing to file: ' + generalFilePath);
 
             // Generamos el archivo de la ruta general
             fs.writeFile(generalFilePath, '',  function(err) {
@@ -401,7 +412,7 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 segmentedFiles.map(
                     f => {
 
-                        logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
+                        //logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
 
                         fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
@@ -494,7 +505,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     return SleepPromise(1)
     .then(
         result => {
-            logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
+            //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
 
             // Lanzamos el request al servidor centralizado
             return InconcertRequest(myBody.installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', myBody);
@@ -512,7 +523,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
 
             // Si la respuesta es true movemos el archivo a la carpeta Completed
             } else {
-                logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Moving file to Completed folder: ' + myBody.file + '::' + result.data);
+                //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Moving file to Completed folder: ' + myBody.file + '::' + result.data);
 
                 // Movemos el archivo a la carpeta Completed
                 return InconcertSegmentedFileToCompletedFolder(result.data);   
@@ -523,7 +534,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
         result => {
             if (result) {
                 if (arrSummary.length > 0) {
-                    logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Launching recursice function: ' + arrSummary.length);
+                    //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Launching recursice function: ' + arrSummary.length);
                     
                     return InconcertSegmenteFileRecursiveSend(arrSummary);
                 } else 
@@ -535,7 +546,7 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     )
     .catch(
         err => {
-            logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
+            //logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
 
             Promise.resolve({'res' : false, 'err' : err});
         }
