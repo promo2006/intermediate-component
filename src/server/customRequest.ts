@@ -257,9 +257,9 @@ export function InconcertAddDataToGeneralFile(myText : string, myTextStatus ?: s
 
 // Esta función agrega un registro de texto al archivo de registro segmentado
 export function InconcertAddDataToSegmentedFile(myText : string[]) : boolean {
-    let blockFileNewNamePath : string = segmentedFileFolderPath + moment().format('x') + '-NEW.txt';
-    let blockFileUpdateNamePath : string = segmentedFileFolderPath + moment().format('x') + '-UPDATE.txt';
-    let blockFileCompletedNamePath : string = segmentedFileFolderPath + moment().format('x') + '-COMPLETED.txt';
+    let blockFileNewNamePath : string = segmentedFileFolderPath + moment().format('x') + '1-NEW.txt';
+    let blockFileUpdateNamePath : string = segmentedFileFolderPath + moment().format('x') + '2-UPDATE.txt';
+    let blockFileCompletedNamePath : string = segmentedFileFolderPath + moment().format('x') + '3-COMPLETED.txt';
 
     // Declaramos variables para contar los registros de cada archivo
     let newInsertCounter = 0;
