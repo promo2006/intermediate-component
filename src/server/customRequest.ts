@@ -11,7 +11,7 @@ import { InconcertEncrypt, InconcertDecrypt } from './crypt';
 import * as moment from 'moment';
 
 // Importo funciones para manejo de archivos
-import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile } from './shared/file-manager';
+import { ReadFileContent, GetFolderTree, CopyFile, DeleteFile, ExistInFileSystem, CreateFolder } from './shared/file-manager';
 
 // Inicializo los logs
 //log4js.configure(LOGGER_CONFIG);
@@ -196,12 +196,54 @@ export function SleepPromise(secondTime: number): Promise<boolean> {
 
 // Ruta donde guardaremos los registros txt de Speech & Quality 
 const rootPath : string = '/sq/';
+// Ruta de la carpeta donde guardaremos el registro general
+const storagePath : string = rootPath + 'storage/';
 // Ruta para el archivo de registro general
 const generalFilePath : string = rootPath + 'storage/file.txt';
 // Ruta de carpeta para los archivos segmentados pendientes de enviar al servidor centralizado
 const segmentedFileFolderPath : string = rootPath + 'storage/out/';
 // Ruta de carpeta para los archivos segmentados ya enviados y procesados en el servidor centralizado
 const completedFileFolderPath : string = rootPath + 'storage/completed/';
+
+// Función que verificará que existan las carpetas requeridas para el componente intermedio
+export function InconcertCheckSystemFolder() : Promise<boolean> {
+    return DummyPromise()
+    .then(
+        result => {
+            // Creamos la carpeta sq
+            return CreateFolder(rootPath);
+        }
+    )
+    .then(
+        result => {
+            // Creamos la carpeta storage
+            return CreateFolder(storagePath);
+        }
+    )
+    .then(
+        result => {
+            // Creamos la carpeta out
+            return CreateFolder(segmentedFileFolderPath);
+        }
+    )
+    .then(
+        result => {
+            // Creamos la carpeta completed
+            return CreateFolder(completedFileFolderPath);
+        }
+    )
+    .then(
+        result => {
+            // Retornamos el resultado
+            return Promise.resolve(result);
+        }
+    )
+    .catch(
+        err => {
+            return Promise.resolve(false);
+        }
+    );
+}
 
 // Esta función verifica que exista el archivo de registro general y lo crea en caso no exista
 export function InconcertExistsGeneralFile() : boolean {
@@ -350,7 +392,7 @@ export function InconcertSplitGeneralFileData() : void {
     let data = fs.readFileSync(generalFilePath, 'utf-8');
     
     // Cantidad de registros para los archivos segmentados
-    let blockSize = 4;
+    let blockSize = 50;
 
     let content = data.toString().split('\n');
     let totalRows = content.filter(r => r.length > 0).length;
@@ -552,6 +594,13 @@ function InconcertSegmentedFileToCompletedFolder(segmentedFileName : string) : P
     return DummyPromise()
     .then(
         result => {
+            // Verificamos si existe la carpeta Completed
+            return CreateFolder(completedFileFolderPath)
+        }
+    )
+    .then(
+        result => {
+            // Copiamos el archivo a la carpeta Completed
             return CopyFile(sourcePath, targetPath);
         }
     )
