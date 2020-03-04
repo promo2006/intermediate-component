@@ -421,6 +421,12 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
     return DummyPromise()
     .then(
         result => {
+            // Validamos que existen las carpetas del sistema
+            return InconcertCheckSystemFolder();
+        }
+    )
+    .then(
+        result => {
             // Recuperamos los archivos de la carpeta OUT
             return GetFolderTree(segmentedFileFolderPath);
         }
@@ -431,21 +437,13 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                 // Guardamos en nuestra variable todos los archivos
                 segmentedFiles = result[0].children;
 
-                /*
-                segmentedNewFiles = segmentedFiles.filter(f => f.split('-')[1] = 'new.txt');
-                segmentedUpdateFiles = segmentedFiles.filter(f => f.split('-')[1] = 'update.txt');
-                segmentedCloseFiles = segmentedFiles.filter(f => f.split('-')[1] = 'close.txt');
-                */
-               
                 // Declarramos un PromiseArray para obtener el contenido de cada archivo
                 let fileContentPromises : Promise<any>[] = [];
 
                 // Recorremos el listado de archivos segmentados
                 segmentedFiles.map(
                     f => {
-
                         //logger.info('[IntermediateComponent::InconcertSegmentedFileUpload] Promising read: ' + f.fullPath);
-
                         fileContentPromises.push(ReadFileContent(f.fullPath, 'utf8'));
                     }
                 )
@@ -474,7 +472,6 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
                         }
 
                         arrSummary.push(body);
-                        //promises.push(InconcertRequest(installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', body));
                     }
                 )
             } else {
@@ -482,35 +479,8 @@ export function InconcertSegmentedFileUpload(installationId : string) : Promise<
             }
 
             return InconcertSegmenteFileRecursiveSend(arrSummary);
-            //return Promise.all(promises);
         }
     )
-    /*
-    .then(
-        result => {
-            // Almacenamos los resultados de los archivos enviados
-            segmentedFilesResult = result;
-
-            // Declarramos un PromiseArray para los archivos que serán movidos a la carpeta Completed
-            let moveFilepromises : Promise<any>[] = [];
-
-            if (segmentedFilesResult && segmentedFilesResult.length > 0) {
-                segmentedFilesResult.map(
-                    r => {
-                        // Validamos si la operación fue exitosa
-                        if (r.status === true) {
-                            moveFilepromises.push(InconcertSegmentedFileToCompletedFolder(r.data));   
-                        } 
-                    }
-                );
-            } else {
-                throw 'SERVER_ERROR_NOT_RECEIVED_RESULT';
-            }  
-            
-            return Promise.all(moveFilepromises);
-        }
-    )
-    */
     .then(
         result => {
             if (result && result.status) {
@@ -537,8 +507,6 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     return SleepPromise(1)
     .then(
         result => {
-            //logger.info('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Sending file to Central Server: ' + myBody.file);
-
             // Lanzamos el request al servidor centralizado
             return InconcertRequest(myBody.installationId, 'IC_PARAM_URL_BATCH_DETAIL_SAVE', myBody);
         }
@@ -578,8 +546,6 @@ function InconcertSegmenteFileRecursiveSend(arrSummary : any[]) : Promise<any> {
     )
     .catch(
         err => {
-            //logger.error('[IntermediateComponent::InconcertSegmenteFileRecursiveSend] Error: ' + err);
-
             Promise.resolve({'res' : false, 'err' : err});
         }
     )
