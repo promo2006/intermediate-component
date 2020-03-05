@@ -8,6 +8,7 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_VCC_GET_STATUS:'api/vcc/get_vcc_status',
     IC_PARAM_URL_VCC_GET_RATES:'api/vcc/get_vcc_rates',
     IC_PARAM_URL_VCC_BALANCE_ALLOCATION:'api/vcc/balance_allocation',
+    IC_PARAM_URL_ACCOUNT_GET_ACCOUNT_STATUS_BY_VCC: 'api/account/get_account_status_by_vcc',
     IC_PARAM_URL_ACCOUNT_GET_BALANCE:'api/account/get_account_balance',
     IC_PARAM_URL_ACCOUNT_GET_VCC:'api/account/get_vccs_by_account',
     IC_PARAM_URL_ACCOUNT_GET_MOVEMENTS:'api/account/get_movements',
