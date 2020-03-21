@@ -261,16 +261,16 @@ export class ProjectConfig {
 		{ src: 'ion-rangeslider/css/ion.rangeSlider.skinHTML5.css', inject: true },
 
 		// Librerías definidas como archivos estáticos.
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase/fonts/font_roboto', 'roboto.css'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase', 'dhtmlxtree.css'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase', 'dhtmlxtree.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/audio-dashboard-highcharts-column.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/cloud.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/highcharts-bar-drilldown.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/search-dashboard-highcharts.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/study.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js', 'tree.js'), inject: true },
-		{ src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/libs', 'd3-tip.js'), inject: 'libs' }
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase/fonts/font_roboto', 'roboto.css'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase', 'dhtmlxtree.css'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/dhtmlx/codebase', 'dhtmlxtree.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/audio-dashboard-highcharts-column.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/cloud.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/highcharts-bar-drilldown.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/search-dashboard-highcharts.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js/study.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/js', 'tree.js'), inject: true },
+		// { src: join(this.PROJECT_ROOT, this.APP_SERVER_SRC, 'static/libs', 'd3-tip.js'), inject: 'libs' }
 	];
 
 	// Orígenes de assets.

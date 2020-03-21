@@ -51,8 +51,6 @@ gulp.task('build.prod', (done: any) =>
               'tslint',
               'css-lint',
               'build.assets.prod',
-              'build.fonts',
-              'build.flags',
               'build.skins',
               'build.html_css',
               'copy.client.js.prod',
@@ -67,7 +65,7 @@ gulp.task('build.prod', (done: any) =>
               'build.packages.prod',
               'build.server.statics',
               'minify.server.statics',
-              //'build.tar.prod',
+              'build.tar.prod',
               //'build.database.scripts',
               done));
 

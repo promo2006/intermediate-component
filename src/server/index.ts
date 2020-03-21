@@ -9,14 +9,10 @@ import * as fs from 'fs';
 import * as log4js from 'log4js';
 
 import * as services from './services';
-import * as permissions from './shared/permission.shared';
 import * as httpShared from './shared/http.shared';
-import * as sessionShared from './shared/session.shared';
 import * as securityShared from './shared/security.shared';
 
 import { LOGGER_CONFIG } from './config/logger.config';
-import { MsSqlInit } from './db/mssql.init';
-import { RedisInit } from './db/redis.init';
 import { DummyPromise } from './shared/promises.shared';
 
 // Importo configuraciones de servidor
@@ -24,9 +20,6 @@ import { SERVER_MODE, HTTP_ENABLED, HTTP_BINDING_HOST, HTTP_BINDING_PORT, HTTPS_
 
 // Importo configuraciones de la aplicación
 import { IS_DISTRIBUTED_SERVICE } from './config/app.config';
-
-// Importo configuracion de permisos
-import { CHECK_API_PERMISSIONS } from './config/permissions.config';
 
 // Obtengo aplicacion de Exress
 let app: express.Express = express();
@@ -123,26 +116,15 @@ export function init() {
 
 	// Si no estoy en un servicio distribuido, inicializo todos los middleware
 	if (!IS_DISTRIBUTED_SERVICE) {
-		// Obtengo datos del request (instancia y dominio)
-		app.use(httpShared.GetRequestData);
 
 		// Aplico handler para header de HSTS (este va al final ya que necesito saber datos del dominio)
 		app.use(securityShared.HstsGuard);
-
-		// Validación de sesion de usuario
-		//	app.use(sessionShared.ValidateUserSession);
-
-		// Chequea los permisos del usuario
-		// if (CHECK_API_PERMISSIONS) app.use(permissions.GrantAccess);
 
 		// Deshabilito el header Etag para evitar cache web en los request (el contenido static lo sigue usando)
 		app.disable('etag');
 
 		// Registro servicios
 		services.init(app);
-
-		// Verifico que no haya que ejecutar un redirect en este dominio
-		app.use(httpShared.ValidateDomainRedirect);
 
 		// Por defecto se retorna el index.html de la aplicacion de angular
 		app.get('/*', function (req: express.Request, res: express.Response, next: any) {
@@ -166,15 +148,6 @@ export function init() {
 
 	// Inicializo engine de template
 	return DummyPromise().then(
-		result => {
-			// Inicializo conexion a base de datos SQL Server
-			return MsSqlInit(app);
-		}
-	).then(
-		result => {
-			// Inicializo conexion a Redis
-			return RedisInit(app);
-		}
 	).then(
 		result => {
 			// Inicializo servicio HTTP
