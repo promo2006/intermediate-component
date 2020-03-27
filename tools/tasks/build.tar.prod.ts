@@ -9,7 +9,7 @@ const plugins = <any>gulpLoadPlugins();
 export = () => {
   return gulp.src(join(DIST_PROD_DIR, '**'))
         .pipe(plugins.rename(function(path: any) {
-            path.dirname = join('speechanalytic', path.dirname);
+            path.dirname = join('intermediate-component-sa', path.dirname);
         }))
         .pipe(plugins.tar(APP_NAME + '_' + APP_VERSION + '.tar'))
         .pipe(plugins.gzip())
