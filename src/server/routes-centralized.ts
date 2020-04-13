@@ -25,5 +25,6 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_ACCOUNT_GET_VCC: 'api/account/get_vccs_by_account',
     IC_PARAM_URL_PLATFORM_INSTALLATION_DATA: 'api/platform/get_installation_ids/',
     IC_PARAM_URL_REPORT_GET_PARAMETERS: 'api/report/get_report_procedure_parameters',
-    IC_PARAM_URL_REPORT_EXECUTE: 'api/report/execute_report'
+    IC_PARAM_URL_REPORT_EXECUTE: 'api/report/execute_report',
+    IC_PARAM_URL_BATCH_ID_SEARCH: 'api/batch/search_batch_id'
 };
