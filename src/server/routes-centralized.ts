@@ -6,6 +6,7 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_API_USER_SAVE: 'api/api_user/save_api_user',
     IC_PARAM_URL_API_USERS_DELETE: 'api/api_user/delete_api_users',
     IC_PARAM_URL_API_USERS_GET: 'api/api_user/get_api_users/',
+    IC_PARAM_URL_BATCH_BALANCE_DETAIL: 'api/batch/get_batch_balance_detail',
     IC_PARAM_URL_BATCH_DETAIL_SAVE: 'api/batch/save_batch_detail',
     IC_PARAM_URL_BATCH_SUMMARY_CLOSE: 'api/batch/close_batch_summary',
     IC_PARAM_URL_BATCH_SUMMARY_CREATE: 'api/batch/save_batch_summary',
@@ -26,5 +27,8 @@ export const RoutesCentralized: any = {
     IC_PARAM_URL_PLATFORM_INSTALLATION_DATA: 'api/platform/get_installation_ids/',
     IC_PARAM_URL_REPORT_GET_PARAMETERS: 'api/report/get_report_procedure_parameters',
     IC_PARAM_URL_REPORT_EXECUTE: 'api/report/execute_report',
-    IC_PARAM_URL_BATCH_ID_SEARCH: 'api/batch/search_batch_id'
+    IC_PARAM_URL_BATCH_ID_SEARCH: 'api/batch/search_batch_id',
+    IC_PARAM_URL_BATCH_SUMMARY_CANCEL: 'api/batch/cancel_batch_summary',
+    IC_PARAM_URL_BATCH_SUMMARY_RESUME: 'api/batch/resume_batch_summary',
+    IC_PARAM_URL_CURRENT_BATCHES_GET: 'api/batch/get_current_batches'
 };
