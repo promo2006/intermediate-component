@@ -26,7 +26,7 @@ export = () => {
     '!' + join(TMP_CLIENT_DIR, '/' + BOOTSTRAP_MODULE_AOT + '.ts'),
   ];
 
-  let result = gulp.src(src)
+  let result = gulp.src(src, { base: TMP_CLIENT_DIR })
     .pipe(plugins.plumber())
     .pipe(plugins.inlineNg2Template(INLINE_OPTIONS))
     .pipe(tsProject())

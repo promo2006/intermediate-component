@@ -43,7 +43,7 @@ export = () => {
   return gulp.src([
       join(SKINS_SRC, '**', '*.scss'),
       '!' + join(SKINS_SRC, '**', '_*.scss')
-    ])
+    ], {base: SKINS_SRC})
     .pipe(plugins.sass(getPluginConfig('gulp-sass')).on('error', plugins.sass.logError))
     .pipe(plugins.postcss(processors))
     .on('error', reportPostCssError)

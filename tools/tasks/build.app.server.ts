@@ -26,7 +26,7 @@ export = () => {
   // Archivos a compilar
   let projectFiles = gulp.src([
     join(APP_SERVER_SRC, '../app.server.ts'),
-  ]);
+  ], {base : 'src'});
 
   // Solo uso los typings en la primer compilación
   if (firstTime) {

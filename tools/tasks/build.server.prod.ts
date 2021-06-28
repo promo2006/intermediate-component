@@ -17,7 +17,7 @@ export = () => {
     TOOLS_DIR + '/manual_typings/**/*.d.ts',
     join(TMP_SERVER_DIR, '**/*.ts')
   ];
-  let result = gulp.src(src)
+  let result = gulp.src(src, {base: TMP_SERVER_DIR})
     .pipe(plugins.plumber())
     .pipe(tsProject())
     .once('error', function () {

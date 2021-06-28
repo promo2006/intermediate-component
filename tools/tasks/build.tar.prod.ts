@@ -7,7 +7,7 @@ import { APP_NAME, APP_VERSION, DIST_DIR, DIST_PROD_DIR } from '../config';
 const plugins = <any>gulpLoadPlugins();
 
 export = () => {
-  return gulp.src(join(DIST_PROD_DIR, '**'))
+  return gulp.src(join(DIST_PROD_DIR, '**'), { base : DIST_PROD_DIR })
         .pipe(plugins.rename(function(path: any) {
             path.dirname = join('intermediate-component-sa', path.dirname);
         }))

@@ -354,12 +354,12 @@ export function ReadFileContent(fileName: string, encode: string, safe?: boolean
 		// Leo el contenido del archivo
 		try {
 			fs.readFile(fileName, encode, function (err: any, data: any) {
-				logger.info('ReadFileContent - readFile - fileName: ', fileName);
+				//logger.info('ReadFileContent - readFile - fileName: ', fileName);
 				if (err) {
 					if (safe) {
 						return resolve(null);
 					} else {
-						logger.info('ReadFileContent - readFile - err: ', err);
+						//logger.info('ReadFileContent - readFile - err: ', err);
 						return reject(err);
 					}
 				} else {

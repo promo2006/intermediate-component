@@ -1,34 +1,19 @@
 const crypto = require('crypto');
 
-const algorithm = 'aes192';
-const password = 'abcdefg';
+const algorithm = 'aes-256-ctr';
+const password = 'vOVH6sdmpNWjRRIqCc7rdxs01lwHzfr3';
 
 export function InconcertEncrypt(myText) : string {
-    let cipher = crypto.createCipher(algorithm, password);
-    let encrypted = '';
-    cipher.on(
-        'readable',
-        () => {
-            const data = cipher.read();
-            if (data) 
-                encrypted += data.toString('hex');
-        }
-    );
-    cipher.on(
-        'end',
-        () => {
-            return encrypted;
-        }
-    );
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(algorithm, password, Buffer.from(iv));
+    const encrypted = Buffer.concat([cipher.update(myText), cipher.final()]);
 
-    cipher.write(myText);
-    cipher.end();
-
-    return encrypted;
+    return `${encrypted.toString('hex')}-${iv.toString('hex')}`;
 }
 
 export function InconcertDecrypt(myEncryptedText) : string {
-    let decipher = crypto.createDecipher(algorithm, password);
+    const iv = crypto.randomBytes(24);
+    let decipher = crypto.createDecipheriv(algorithm, Buffer.from(password), iv);
     let decrypted = '';
     decipher.on(
         'readable',

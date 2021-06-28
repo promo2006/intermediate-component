@@ -1,5 +1,5 @@
 
-import * as runSequence from 'run-sequence';
+import * as runSequence from 'gulp4-run-sequence';
 import * as gulp from 'gulp';
 import * as tty from 'tty';
 

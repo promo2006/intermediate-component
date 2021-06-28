@@ -23,7 +23,7 @@ export = () => {
       '!' + join(APP_SERVER_DEST, 'static/js/*.min.js')
     ];
 
-    return gulp.src(src)
+    return gulp.src(src, {base: APP_SERVER_DEST + '/static/js'})
       .pipe(minify({
         mangle: true
       }))
@@ -40,7 +40,7 @@ export = () => {
       '!' + join(APP_SERVER_DEST, 'static/css/*.min.css')
     ];
 
-    return gulp.src(src)
+    return gulp.src(src, {base: APP_SERVER_DEST + '/static/css'})
       .pipe(cleanCss())
       .pipe(plugins.rename(function(path: any) {
           path.extname = '.min' + path.extname;
