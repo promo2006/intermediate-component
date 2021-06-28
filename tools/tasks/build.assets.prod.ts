@@ -25,7 +25,7 @@ export = () => {
     '!' + join(APP_CLIENT_SRC, '**', '*.ts'),
     '!' + join(APP_CLIENT_SRC, '**', '*.html'),
     '!' + join(APP_CLIENT_SRC, '**', '*.scss')
-  ].concat(TEMP_FILES.map((p) => { return '!' + p; })))
+  ].concat(TEMP_FILES.map((p) => { return '!' + p; })),{base:APP_CLIENT_SRC})
     .pipe(onlyDirs(es))
     .pipe(gulp.dest(APP_CLIENT_DEST));
 };

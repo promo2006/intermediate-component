@@ -1,7 +1,9 @@
 import * as gulp from 'gulp';
 import * as gulpLoadPlugins from 'gulp-load-plugins';
-import { join } from 'path';
+import * as merge from 'merge-stream';
 import * as slash from 'slash';
+import * as replace from 'gulp-replace';
+import { join } from 'path';
 
 import { APP_BASE, APP_CLIENT_DEST, APP_CLIENT_SRC, DEPENDENCIES, CSS_DEST, ASSETS_SRC, TEMPLATE_CONFIG } from '../config';
 import { TemplateLocalsBuilder } from '../utils';
@@ -9,17 +11,15 @@ import { TemplateLocalsBuilder } from '../utils';
 const plugins = <any>gulpLoadPlugins();
 
 
-/**
- * Executes the build process, injecting the shims and libs into the `index.hml` for the development environment.
- */
-export = () => {
-  return gulp.src(join(APP_CLIENT_SRC, 'index.html'))
+// Función para inyectar librerías y shims en index.html para caso ambiente de desarrollo
+function buildIndex() {
+  return gulp.src(join(APP_CLIENT_SRC, 'index.html'), { base: APP_CLIENT_SRC })
     .pipe(inject('shims'))
     .pipe(inject('libs'))
     .pipe(inject())
     .pipe(plugins.template(new TemplateLocalsBuilder().withStringifiedSystemConfigDev().build(), TEMPLATE_CONFIG))
     .pipe(gulp.dest(APP_CLIENT_DEST));
-};
+}
 
 /**
  * Injects the file with the given name.

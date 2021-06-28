@@ -1,7 +1,7 @@
 import * as gulp from 'gulp';
 import * as path from 'path';
 import * as log from 'fancy-log';
-import * as runSequence from 'run-sequence';
+import * as runSequence from 'gulp4-run-sequence';
 import { loadTasks } from './tools/utils';
 
 loadTasks(path.resolve('./tools/tasks'));
@@ -24,32 +24,11 @@ gulp.task('build.dev', (done: any) =>
               done));
 
 // --------------
-// Build test - create testing database and execute protractor
-gulp.task('build.test',['build.test.database.scripts','test.database'], (done: any) => {
-  runSequence('tslint',
-              'css-lint',
-              'build.assets.dev',
-              'build.html_css',
-              'build.fonts',
-              'build.flags',
-              'build.skins',
-              'build.js.dev',
-              'build.index.dev',
-              'build.server.dev',
-              'build.app.server',
-              'copy.server.assets',
-              'build.server.statics',
-              'server.start', //se le pasa --b como argumento para que solo levante el webdriver
-              'e2e',
-              done);
-});
-
-// --------------
 // Build prod (compilación JIT)
 gulp.task('build.prod', (done: any) =>
   runSequence('clean.prod',
-              'tslint',
-              'css-lint',
+              //'tslint',
+              //'css-lint',
               'build.assets.prod',
               'build.skins',
               'build.html_css',

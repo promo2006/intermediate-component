@@ -6,7 +6,7 @@ import * as merge from 'merge-stream';
 import * as log from 'fancy-log';
 import { Chalk } from 'chalk';
 import { join } from 'path';
-import { noop } from '../utils';
+import { noop, dummyStream } from '../utils';
 
 import {
   APP_CLIENT_DEST,
@@ -15,7 +15,6 @@ import {
   CSS_DEST,
   CSS_SRC,
   DEPENDENCIES,
-  ENABLE_SCSS,
   ENV,
   TMP_CLIENT_DIR,
   getPluginConfig,
@@ -35,6 +34,7 @@ const processors = [
 
 const reportPostCssError = (e: any) => log(chalk.red(e.message));
 
+// Obtengo lag de modo producción
 const isProd = ENV === 'prod';
 
 if (isProd) {
@@ -48,64 +48,33 @@ if (isProd) {
   );
 }
 
-/**
- * Copies all HTML files in `src/client` over to the `dist/tmp` directory.
- */
-function prepareTemplates() {
-  return gulp.src(join(APP_CLIENT_SRC, '**', '*.html'))
+// Copia todos los archivos HTML a la carpeta tmp_client
+function CopyHtmlFilesToTmp() {
+  return gulp.src(join(APP_CLIENT_SRC, '**', '*.html'), { base: APP_CLIENT_SRC })
     .pipe(gulp.dest(TMP_CLIENT_DIR));
 }
 
-/**
- * Execute the appropriate component-stylesheet processing method based on user stylesheet preference.
- */
-function processComponentStylesheets() {
-  return ENABLE_SCSS ? processComponentScss() : processComponentCss();
-}
-
-/**
- * Process scss files referenced from Angular component `styleUrls` metadata
- */
-function processComponentScss() {
-  return gulp.src(join(APP_CLIENT_SRC, '**', '*.scss'))
+// Procesa y genera los archivos de estilos de componentes de la aplicación
+function GenerateComponentsStylesheets() {
+  return gulp.src(join(APP_CLIENT_SRC, '**', '*.scss'), { base: APP_CLIENT_SRC })
     .pipe(isProd ? plugins.cached('process-component-scss') : noop())
     .pipe(isProd ? plugins.progeny() : noop())
     .pipe(isProd ? noop() : plugins.sourcemaps.init())
     .pipe(plugins.sass(getPluginConfig('gulp-sass')).on('error', plugins.sass.logError))
     .pipe(plugins.postcss(processors))
     .on('error', reportPostCssError)
-    .pipe(isProd ? noop() : plugins.sourcemaps.write(''))
-    .pipe(gulp.dest(isProd ? TMP_CLIENT_DIR : APP_CLIENT_DEST));
+    .pipe(isProd ? noop() : plugins.sourcemaps.write('', {
+      sourceMappingURL: function(file) {
+          return '/dist/dev/client/' + file.relative.replace(/\\/g, '/') + '.map';
+      }
+  }))
+  .pipe(gulp.dest(isProd ? TMP_CLIENT_DIR : APP_CLIENT_DEST));
 }
 
-/**
- * Processes the CSS files within `src/client` excluding those in `src/client/assets` using `postcss` with the
- * configured processors.
- */
-function processComponentCss() {
-  return gulp.src([
-    join(APP_CLIENT_SRC, '**', '*.css'),
-    '!' + join(APP_CLIENT_SRC, 'assets', '**', '*.css')
-  ])
-    .pipe(isProd ? plugins.cached('process-component-css') : noop())
-    .pipe(plugins.postcss(processors))
-    .on('error', reportPostCssError)
-    .pipe(gulp.dest(isProd ? TMP_CLIENT_DIR : APP_CLIENT_DEST));
-}
-
-/**
- * Execute external-stylesheet processing method based on presence of --scss flag.
- */
-function processExternalStylesheets() {
-  return ENABLE_SCSS ? processAllExternalStylesheets() : processExternalCss();
-}
-
-/**
- * Process scss stylesheets located in `src/client/css` and any css dependencies specified in
- * the global project configuration.
- */
-function processAllExternalStylesheets() {
-  return merge(getExternalCssStream(), getExternalScssStream())
+// Procesa y genera los archivos de estilos main y de dependencias externas
+function GenerateMainAndExternalStylesheets() {
+  // Obtengo la combinación de streams para CSS y SCSS y los proceso
+  return merge(GetMainScssStream(), GetExternalCssStream(), GetExternalScssStream())
     .pipe(isProd ? plugins.concatCss(gulpConcatCssConfig.targetFile, gulpConcatCssConfig.options) : noop())
     .pipe(plugins.postcss(processors))
     .on('error', reportPostCssError)
@@ -113,53 +82,45 @@ function processAllExternalStylesheets() {
     .pipe(gulp.dest(CSS_DEST));
 }
 
-/**
- * Get a stream of external css files for subsequent processing.
- */
-function getExternalCssStream() {
-  return gulp.src(getExternalCss())
-    .pipe(isProd ? plugins.cached('process-external-css') : noop());
-}
-
-/**
- * Get an array of filenames referring to all external css stylesheets.
- */
-function getExternalCss() {
-  return DEPENDENCIES.filter(dep => /\.css$/.test(dep.src)).map(dep => dep.src);
-}
-
-/**
- * Get a stream of external scss files for subsequent processing.
- */
-function getExternalScssStream() {
-  return gulp.src(getExternalScss())
+// Genera el stream de archivos SCSS para procesamiento de dependencias externas
+function GetMainScssStream() {
+  // Devuelvo el array de los archivos, pasados por un cache
+  return gulp.src([
+      join(CSS_SRC, '**', '*.scss'),
+      '!' + join(CSS_SRC, '**', '_*.scss')
+      ], { base: CSS_SRC })
     .pipe(isProd ? plugins.cached('process-external-scss') : noop())
     .pipe(isProd ? plugins.progeny() : noop())
     .pipe(plugins.sass(getPluginConfig('gulp-sass')).on('error', plugins.sass.logError));
 }
 
-/**
- * Get an array of filenames referring to external scss stylesheets located in the global DEPENDENCIES
- * as well as in `src/css`.
- */
-function getExternalScss() {
-  return DEPENDENCIES.filter(dep => /\.scss$/.test(dep.src)).map(dep => dep.src)
-    .concat([join(CSS_SRC, '**', '*.scss')]);
+// Genera el stream de archivos CSS para procesamiento de dependencias externas
+function GetExternalCssStream() {
+  // Armo el array de dependencias CSS a incluir
+  let globArray: string[] = DEPENDENCIES.filter(dep => /\.css$/.test(dep.src)).map(dep => dep.src);
+  // Si el array es vacío, no sigo (falla gulp)
+  if (!globArray || !globArray.length) return dummyStream();
+  // Devuelvo el array de los archivos, pasados por un cache
+  return gulp.src(globArray,{allowEmpty: true})
+    .pipe(isProd ? plugins.cached('process-external-css') : noop());
 }
 
-/**
- * Processes the external CSS files using `postcss` with the configured processors.
- */
-function processExternalCss() {
-  return getExternalCssStream()
-    .pipe(plugins.postcss(processors))
-    .pipe(isProd ? plugins.concatCss(gulpConcatCssConfig.targetFile, gulpConcatCssConfig.options) : noop())
-    .on('error', reportPostCssError)
-    .pipe(isProd ? cleanCss() : noop())
-    .pipe(gulp.dest(CSS_DEST));
+// Genera el stream de archivos SCSS para procesamiento de dependencias externas
+function GetExternalScssStream() {
+  // Armo el array de dependencias SCSS a incluir
+  let globArray: string[] = DEPENDENCIES.filter(dep => /\.scss$/.test(dep.src)).map(dep => dep.src);
+  // Si el array es vacío, no sigo (falla gulp)
+  if (!globArray || !globArray.length) return dummyStream();
+  // Devuelvo el array de los archivos, pasados por un cache
+  return gulp.src(globArray,{allowEmpty: true})
+    .pipe(isProd ? plugins.cached('process-external-scss') : noop())
+    .pipe(isProd ? plugins.progeny() : noop())
+    .pipe(plugins.sass(getPluginConfig('gulp-sass')).on('error', plugins.sass.logError));
 }
 
-/**
- * Executes the build process, processing the HTML and CSS files.
- */
-export = () => merge(processComponentStylesheets(), prepareTemplates(), processExternalStylesheets());
+// Ejecuta y combina todas las tareas en un stream mergeado
+export = () => merge(
+  CopyHtmlFilesToTmp(),
+  GenerateComponentsStylesheets(),
+  GenerateMainAndExternalStylesheets()
+);

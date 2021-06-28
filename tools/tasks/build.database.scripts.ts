@@ -19,8 +19,9 @@ const scripts = [
 ];
 
 export = () => {
-  return gulp.src(scripts)
+  return gulp.src(scripts,{allowEmpty: true})
     .pipe(plugins.count('## sql files selected for bundle'))
     .pipe(plugins.concat(APP_NAME + '_' + APP_VERSION + '_database.sql'))
+    .pipe(plugins.replace(/CREATE OR ALTER/g, 'CREATE'))
     .pipe(gulp.dest(resolve(DIST_DIR)));
 };

@@ -153,6 +153,9 @@ export class ProjectConfig {
 	// Ruta base para los estilos de los skins.
 	SKIN_CSS_BASE_URL = this.ENV === ENVIRONMENTS.DEVELOPMENT ? this.SKINS_DEST.replace(/\\/g, '/') : 'client/css';
 
+	// Ruta base para archivo de estilos principal
+    MAIN_CSS_BASE_URL = this.ENV === ENVIRONMENTS.DEVELOPMENT ? this.CSS_DEST.replace(/\\/g, '/') : 'client/css';
+
 	// Lista de reglas para el codelizer.
 	CODELYZER_RULES = customRules();
 
@@ -638,6 +641,11 @@ export class ProjectConfig {
 	getInjectableStyleExtension() {
 		return this.ENV === ENVIRONMENTS.PRODUCTION && this.ENABLE_SCSS ? 'scss' : 'css';
 	}
+    
+    // Devuelve un timestamp en base a la fecha actual
+    getTimeStamp = function(): string {
+        return Date.now().toString();
+    }
 }
 
 // Normaliza las dependencias.

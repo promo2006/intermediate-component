@@ -11,6 +11,6 @@ export = () => {
       join(APP_SERVER_SRC, '**/*.ts'),
       '!' + join(APP_SERVER_SRC, '**/*.spec.ts'),
       '!' + join(APP_SERVER_SRC, '**/*.e2e-spec.ts')
-    ])
+    ], {base: APP_SERVER_SRC})
     .pipe(gulp.dest(TMP_SERVER_DIR));
 };

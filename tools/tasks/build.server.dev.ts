@@ -28,7 +28,7 @@ export = () => {
     join(APP_SERVER_SRC, '**/*.ts'),
     '!' + join(APP_SERVER_SRC, '**/*.spec.ts'),
     '!' + join(APP_SERVER_SRC, '**/*.e2e-spec.ts'),
-  ]);
+  ], { base: APP_SERVER_SRC });
 
   // Solo uso los typings en la primer compilación
   if (firstTime) {
@@ -53,7 +53,7 @@ export = () => {
 
   // Ejecuto la compilación y copio el resultado en carpeta destino
   return result.js
-    .pipe(plugins.sourcemaps.write({includeContent: false, sourceRoot: resolve('./src/server')}))
+    .pipe(plugins.sourcemaps.write({ includeContent: false, sourceRoot: resolve('./src/server')}))
     .pipe(plugins.template(new TemplateLocalsBuilder().withStringifiedSystemConfigDev().build(), TEMPLATE_CONFIG))
     .pipe(gulp.dest(APP_SERVER_DEST));
 };

@@ -1,5 +1,5 @@
 import * as gulpLoadPlugins from 'gulp-load-plugins';
-import * as runSequence from 'run-sequence';
+import * as runSequence from 'gulp4-run-sequence';
 import * as gulp from 'gulp';
 import * as path from 'path';
 

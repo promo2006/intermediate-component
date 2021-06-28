@@ -1,38 +1,29 @@
 import * as gulp from 'gulp';
 import * as gulpLoadPlugins from 'gulp-load-plugins';
-import { join, sep, normalize } from 'path';
+import * as merge from 'merge-stream';
 import * as slash from 'slash';
+import * as replace from 'gulp-replace';
+import { join, sep, normalize } from 'path';
 
-import {
-  APP_CLIENT_BASE,
-  APP_CLIENT_DEST,
-  APP_CLIENT_SRC,
-  CSS_DEST,
-  JS_DEST,
-  JS_PROD_APP_BUNDLE,
-  JS_PROD_SHIMS_BUNDLE,
-  TEMPLATE_CONFIG,
-} from '../config';
+import { APP_CLIENT_BASE, APP_CLIENT_DEST, APP_CLIENT_SRC, CSS_DEST, JS_DEST, JS_PROD_APP_BUNDLE, JS_PROD_SHIMS_BUNDLE, TEMPLATE_CONFIG } from '../config';
 import { TemplateLocalsBuilder } from '../utils';
 
+// Obtengo plugins de gulp
 const plugins = <any>gulpLoadPlugins();
 
-/**
- * Executes the build process, injecting the JavaScript and CSS dependencies into the `index.html` for the production
- * environment.
- */
-export = () => {
-  return gulp.src(join(APP_CLIENT_SRC, 'index.html'))
+// Función para inyectar dependencias js y css en index.html para caso ambiente de prodcción
+function buildIndex() {
+  return gulp.src(join(APP_CLIENT_SRC, 'index.html'), { base: APP_CLIENT_SRC })
     .pipe(injectJs())
     .pipe(injectCss())
     .pipe(plugins.template(new TemplateLocalsBuilder().withStringifiedSystemConfigDev().build(), TEMPLATE_CONFIG))
+    .pipe(replace(/<!--.*-->/g, ''))
+    .pipe(replace(/\s+(\r\n|\r|\n)/g, '\r\n'))
+    .pipe(replace(/(\r\n|\r|\n){2,}/gm, '\r\n'))
     .pipe(gulp.dest(APP_CLIENT_DEST));
-};
+}
 
-/**
- * Injects the given file array and transforms the path of the files.
- * @param {Array<string>} files - The files to be injected.
- */
+// Función para hacer inyección de un array de archivos
 function inject(...files: Array<string>) {
     return plugins.inject(gulp.src(files, { read: false }), {
         files,
@@ -40,27 +31,21 @@ function inject(...files: Array<string>) {
     });
 }
 
-/**
- * Injects the bundled JavaScript shims and application bundles for the production environment.
- */
+// Inyecta los archivos JS de shims y app
 function injectJs() {
   return inject(join(JS_DEST, JS_PROD_SHIMS_BUNDLE), join(JS_DEST, JS_PROD_APP_BUNDLE));
 }
 
-/**
- * Injects the bundled CSS files for the production environment.
- */
+// Inyecta los archivos CSS existentes
 function injectCss() {
   return inject(
     join(CSS_DEST, '**', '*.css'),
+    '!' + join(CSS_DEST, 'main.css'),
     '!' + join(CSS_DEST, '**', 'skin-*.css')
   );
 }
 
-/**
- * Transform the path of a dependency to its location within the `dist` directory according to the applications
- * environment.
- */
+// Hace la transformación del path del archivo para inyectar
 function transformPath() {
   return function(filepath: string) {
     let path: Array<string> = normalize(filepath).split(sep);
@@ -74,3 +59,6 @@ function transformPath() {
     return slash(plugins.inject.transform.apply(plugins.inject.transform, arguments));
   };
 }
+
+// Ejecuto todos los builds juntos
+export = () => merge(buildIndex());

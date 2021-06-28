@@ -25,7 +25,7 @@ export = () => {
     '!' + join(APP_SERVER_SRC, 'static/libs/grapesjs/forms/**/*.js'),
     ...(firstTime ? [] : ['!' + join(APP_SERVER_SRC, 'template/views/**/*')]),
     '!' + join(APP_SERVER_SRC, 'tsconfig.json')
-  ]);
+  ], {base: APP_SERVER_SRC});
 
   // Escribo a log
   if (!firstTime) log('Fastbuild ' + chalk.cyan('Excluyendo carpeta de templates.'));
